@@ -18,7 +18,7 @@ class HelpCommand extends Command
 {
     protected function configure()
     {
-        $this->setName('should:help')
+        $this->setName('help')
              ->setDescription('Should console commands');
     }
 

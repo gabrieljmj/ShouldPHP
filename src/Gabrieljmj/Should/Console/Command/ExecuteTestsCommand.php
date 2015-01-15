@@ -34,7 +34,7 @@ class ExecuteTestsCommand extends Command
 
     protected function configure()
     {
-        $this->setName('should:execute')
+        $this->setName('execute')
              ->setDescription('Executes tests')
              ->addArgument(
                     'file',
