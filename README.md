@@ -15,7 +15,7 @@ return $a;
 ```
 Console:
 ```
-php app.php should:execute test.php
+php should should:execute test.php
 ```
 
 Several:
@@ -30,10 +30,10 @@ Several:
 }
 ```
 ```
-php app.php should:execute should.json
+php should should:execute should.json
 ```
 
 Saving logs (command ```-s|--save```):
 ```
-php app.php should:execute test.php -s "tests.log"
+php should should:execute test.php -s "tests.log"
 ```
