@@ -45,12 +45,6 @@ class ExecuteTestsCommand extends Command
                     's',
                     InputOption::VALUE_REQUIRED,
                     'Do you want to save the report?'
-             )
-             ->addOption(
-                    'file',
-                    'f',
-                    InputOption::VALUE_REQUIRED,
-                    'From what file do you want to receive the test?'
              );
     }
 
@@ -58,39 +52,71 @@ class ExecuteTestsCommand extends Command
     {
         $file = $input->getArgument('file');
         $input->hasArgument('test_name') ? $testName = $input->getArgument('test_name') : null;
+        $ext = $this->getFileExt($file);
+        $testsTotal = 0;
 
-        if (file_exists($file)) {
-            $file = file_get_contents($file);
-            $json = json_decode($file);
-            $ambientFiles = $json->ambients;
-            $ambients = [];
+        $output->writeln("\nREPORT\n--------------------------\n");
 
-            foreach ($ambientFiles as $ambientFile) {
-                if (!file_exists($ambientFile)) {
-                    throw new Exception('The file of an ambient was not found: ' . $ambientFile);
+        if ($ext === 'php') {
+            $ambient = $this->validateFile($file);
+
+            $report = $this->runTest($ambient, $input, $output);
+            $total = $report['total']['total'];
+            $success = $report['total']['all']['success'];
+            $fail = $report['total']['all']['fail'];
+
+            $output->writeln("\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}");
+        } else {
+            if (file_exists($file)) {
+                $file = file_get_contents($file);
+                $json = json_decode($file);
+                $ambientFiles = $json->ambients;
+                $ambients = [];
+
+                foreach ($ambientFiles as $ambientFile) {
+                    $ambients[] = $this->validateFile($ambientFile);
                 }
 
-                $ambientInstance = require $ambientFile;
-
-                if (!is_object($ambientInstance) || !$ambientInstance instanceof AmbientInterface) {
-                    throw new Exception('The file of an ambient does not return an instance of a valid ambient');
+                foreach ($ambients as $ambient) {
+                    $this->runTest($ambient, $input, $output);
                 }
-
-                $ambients[] = $ambientInstance;
-            }
-
-            foreach ($ambients as $ambient) {
-                $ambient->run();
-                $name = $ambient->getName();
-                $report = $ambient->getReport();
-
-                if ($input->getOption('save')) {
-                    $this->logger->pushHandler(new StreamHandler($input->getOption('save'), Logger::INFO));
-                    $this->logger->info($report->serialize());
-                }
-
-                $output->writeln($report->serialize());
             }
         }
+    }
+
+    protected function getFileExt($file)
+    {
+        $e = explode('.', $file);
+        return end($e);
+    }
+
+    protected function validateFile($file)
+    {
+        if (!file_exists($file)) {
+            throw new Exception('The file of an ambient was not found: ' . $file);
+        }
+
+        $ambientInstance = require $file;
+
+        if (!is_object($ambientInstance) || !$ambientInstance instanceof AmbientInterface) {
+            throw new Exception('The file of an ambient does not return an instance of a valid ambient');
+        }
+
+        return $ambientInstance;
+    }
+
+    protected function runTest(AmbientInterface $ambient, InputInterface $input, OutputInterface $output)
+    {
+        $ambient->run();
+        $report = $ambient->getReport();
+
+        if ($input->getOption('save')) {
+            $this->logger->pushHandler(new StreamHandler($input->getOption('save'), Logger::INFO));
+            $this->logger->info($report->serialize());
+        }
+
+        $output->writeln($report->serialize());
+
+        return $report;
     }
 }
