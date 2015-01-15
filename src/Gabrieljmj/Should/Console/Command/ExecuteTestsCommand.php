@@ -40,16 +40,17 @@ class ExecuteTestsCommand extends Command
                     InputArgument::REQUIRED,
                     'Indicate the file that contains the tests ambients'
              )
-             ->addArgument(
-                    'test_name',
-                    InputArgument::OPTIONAL,
-                    'Indicate the ambient to test'
-             )
              ->addOption(
                     'save',
                     's',
                     InputOption::VALUE_REQUIRED,
                     'Do you want to save the report?'
+             )
+             ->addOption(
+                    'file',
+                    'f',
+                    InputOption::VALUE_REQUIRED,
+                    'From what file do you want to receive the test?'
              );
     }
 

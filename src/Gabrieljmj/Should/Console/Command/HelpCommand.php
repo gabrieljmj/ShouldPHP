@@ -23,9 +23,10 @@ class HelpCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln("\n\Help to [should:execute]:\n
-    Execution:  should:execute [should_config_file]\n
+        $output->writeln("\nHelp to [should:execute]:\n
+    Execution:  should:execute <should_config_json_file>\n
     Options:\n
-        -s|--save [log_file]       Save logs of tests");
+        -s|--save <file>       Save logs of tests\n
+        -f|--file <file>       Choose a file to receive a test and execute");
     }
 }
