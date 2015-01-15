@@ -72,14 +72,26 @@ class ExecuteTestsCommand extends Command
                 $json = json_decode($file);
                 $ambientFiles = $json->ambients;
                 $ambients = [];
+                $reportE['total'] = 0;
+                $reportE['success'] = 0;
+                $reportE['fail'] = 0;
 
                 foreach ($ambientFiles as $ambientFile) {
                     $ambients[] = $this->validateFile($ambientFile);
                 }
 
                 foreach ($ambients as $ambient) {
-                    $this->runTest($ambient, $input, $output);
+                    $report = $this->runTest($ambient, $input, $output);
+                    $reportE['total'] = $reportE['total'] + $report['total']['total'];
+                    $reportE['success'] = $reportE['success'] + $report['total']['all']['success'];
+                    $reportE['fail'] = $reportE['fail'] + $report['total']['all']['fail'];
                 }
+
+                $success = $reportE['success'];
+                $fail = $reportE['fail'];
+                $total = $reportE['total'];
+
+                $output->writeln("\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}");
             }
         }
     }

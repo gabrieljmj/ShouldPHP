@@ -78,7 +78,7 @@ class Ambient implements AmbientInterface
      * @param string $method
      * @return \Gabrieljmj\Should\Method
      */
-    public function theMethod($class, $property)
+    public function theMethod($class, $method)
     {
         if (!isset($this->methodCollection[$class . ':' . $method])) {
             $should = new ShouldMethod($class, $method);
@@ -109,22 +109,27 @@ class Ambient implements AmbientInterface
     {
         $classAssertList = [];
         $methodAssertList = [];
+        $propertyAssertList =[];
         
         foreach ($this->classCollection as $class) {
-            foreach ($class->should->getAssertList() as $Assert) {
-                $classAssertList[] = $Assert;
+            foreach ($class->should->getAssertList() as $assert) {
+                $classAssertList[] = $assert;
             }
         }
         
         foreach ($this->methodCollection as $method) {
-            foreach ($method->should->getAssertList() as $Assert) {
-                $methodAssertList[] = $Assert;
+            foreach ($method->should->getAssertList() as $assert) {
+                $methodAssertList[] = $assert;
+            }
+        }
+
+        foreach ($this->propertyCollection as $property) {
+            foreach ($property->should->getAssertList() as $assert) {
+                $propertyAssertList[] = $assert;
             }
         }
         
-        $this->report = $this->createReport($classAssertList, $methodAssertList);
-        
-        
+        $this->report = $this->createReport($classAssertList, $methodAssertList, $propertyAssertList);
     }
     
     /**
@@ -148,28 +153,43 @@ class Ambient implements AmbientInterface
      * @param array $methodAssertList
      * @return \Gabrieljmj\Should\Report
      */
-    protected function createReport(array $classAssertList, array $methodAssertList)
+    protected function createReport(array $classAssertList, array $methodAssertList, array $propertyAssertList)
     {
         $report = [];
         $report['test'] = $this->getName();
         $report['total'] = [
-            'total' => ['success' => 0, 'fail' => 0],
+            'total' => 0,
+            'all' => ['success' => 0, 'fail' => 0],
             'class' => ['success' => 0, 'fail' => 0],
-            'method' => ['success' => 0, 'fail' => 0]
+            'method' => ['success' => 0, 'fail' => 0],
+            'property' => ['success' => 0, 'fail' => 0]
         ];
         
         foreach ($classAssertList as $Assert) {
             $status = $Assert->execute() ? 'success' : 'fail';
             $report['class'][$status][] = ['description' => $Assert->getDescription()];
-            $report['total']['total'][$status]++;
+            $report['total']++;
             $report['total']['class'][$status]++;
+            $report['total']['total']++;
+            $report['total']['all'][$status]++;
         }
         
         foreach ($methodAssertList as $Assert) {
             $status = $Assert->execute() ? 'success' : 'fail';
             $report['method'][$status][] = ['description' => $Assert->getDescription()];
-            $report['total']['total'][$status]++;
+            $report['total']++;
             $report['total']['method'][$status]++;
+            $report['total']['total']++;
+            $report['total']['all'][$status]++;
+        }
+
+        foreach ($propertyAssertList as $Assert) {
+            $status = $Assert->execute() ? 'success' : 'fail';
+            $report['method'][$status][] = ['description' => $Assert->getDescription()];
+            $report['total']++;
+            $report['total']['property'][$status]++;
+            $report['total']['total']++;
+            $report['total']['all'][$status]++;
         }
 
         return new Collection($report);
