@@ -15,7 +15,7 @@ return $a;
 ```
 Console:
 ```
-php should execute test.php
+php bin/should execute test.php
 ```
 
 Several:
@@ -30,17 +30,17 @@ Several:
 }
 ```
 ```
-php should execute should.json
+php bin/should execute should.json
 ```
 
 Saving logs (command ```-s|--save```):
 ```
-php should execute test.php -s "tests.log"
+php bin/should execute test.php -s "tests.log"
 ```
 
 Help:
 ```
-php should help
+php bin/should help
 ```
 
 ```
