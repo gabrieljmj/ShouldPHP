@@ -95,12 +95,13 @@ class Ambient implements AmbientInterface
      */
     public function theProperty($class, $property)
     {
-        if (!isset($this->propertyCollection[$class . ':' . $property])) {
+        $className = is_object($class) ? get_class($class) : $class;
+        if (!isset($this->propertyCollection[$className . ':' . $property])) {
             $should = new ShouldProperty($class, $property);
-            $this->propertyCollection[$class . ':' . $property] = new TheProperty($should);
+            $this->propertyCollection[$className . ':' . $property] = new TheProperty($should);
         }
 
-        return $this->propertyCollection[$class . ':' . $property];
+        return $this->propertyCollection[$className . ':' . $property];
     }
     
     /**
@@ -166,27 +167,29 @@ class Ambient implements AmbientInterface
             'property' => ['success' => 0, 'fail' => 0]
         ];
         
-        foreach ($classAssertList as $Assert) {
-            $status = $Assert->execute() ? 'success' : 'fail';
-            $report['class'][$status][] = ['description' => $Assert->getDescription()];
+        foreach ($classAssertList as $assert) {
+            $status = $assert->execute() ? 'success' : 'fail';
+            $report['class'][$status][] = ['description' => $assert->getDescription()];
             $report['total']++;
             $report['total']['class'][$status]++;
             $report['total']['total']++;
             $report['total']['all'][$status]++;
         }
         
-        foreach ($methodAssertList as $Assert) {
-            $status = $Assert->execute() ? 'success' : 'fail';
-            $report['method'][$status][] = ['description' => $Assert->getDescription()];
+        foreach ($methodAssertList as $assert) {
+            $status = $assert->execute() ? 'success' : 'fail';
+            $report['method'][$status][] = ['description' => $assert->getDescription()];
             $report['total']++;
             $report['total']['method'][$status]++;
             $report['total']['total']++;
             $report['total']['all'][$status]++;
         }
 
-        foreach ($propertyAssertList as $Assert) {
-            $status = $Assert->execute() ? 'success' : 'fail';
-            $report['method'][$status][] = ['description' => $Assert->getDescription()];
+        foreach ($propertyAssertList as $assert) {
+            $nameEx = explode('\\', get_class($assert));
+            $name = end($nameEx);
+            $status = $assert->execute() ? 'success' : 'fail';
+            $report['property'][$status][] = ['description' => $assert->getDescription(), 'name' => $name];
             $report['total']++;
             $report['total']['property'][$status]++;
             $report['total']['total']++;

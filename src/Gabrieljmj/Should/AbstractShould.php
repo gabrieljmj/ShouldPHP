@@ -14,15 +14,6 @@ use Gabrieljmj\Should\ShouldInterface;
 
 abstract class AbstractShould implements ShouldInterface
 {
-    public $have;
-
-    public $be;
-
-    public function getAssertList()
-    {
-        return array_merge($this->have->getAssertList(), $this->be->getAssertList());
-    }
-
     public function __set($property, $value)
     {
         if ($property === 'have' || $property === 'be') {

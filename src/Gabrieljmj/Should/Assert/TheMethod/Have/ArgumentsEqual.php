@@ -11,8 +11,7 @@
 namespace Gabrieljmj\Should\Assert\TheMethod\Have;
 
 use Gabrieljmj\Should\Assert\AbstractAssert;
-use \InvalidArgumentException;
-use \ReflectionMethod;
+use ReflectionMethod;
 
 class ArgumentsEqual extends AbstractAssert
 {
@@ -31,7 +30,7 @@ class ArgumentsEqual extends AbstractAssert
 
     public function execute()
     {
-        $ref = new ReflectionMethod($this->class, $this->method);
+        $ref = new \ReflectionMethod($this->class, $this->method);
         $params = $ref->getParameters();
 
         $params = array_map(function ($param)

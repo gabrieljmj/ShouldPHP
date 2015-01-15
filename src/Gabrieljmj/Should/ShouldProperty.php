@@ -14,9 +14,15 @@ use Gabrieljmj\Should\Condition\TheProperty\Be;
 
 class ShouldProperty extends AbstractShould
 {
+    public $be;
+
+    public function getAssertList()
+    {
+        return $this->be->getAssertList();
+    }
+
     public function __construct($class, $property)
     {
-        $class = is_object($class) ? get_class($class) : $class;
         $this->be = new Be($class, $property);
     }
 }
