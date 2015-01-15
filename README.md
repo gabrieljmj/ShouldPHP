@@ -30,10 +30,15 @@ Several:
 }
 ```
 ```
-php should should:execute should.json
+php should execute should.json
 ```
 
 Saving logs (command ```-s|--save```):
 ```
 php should execute test.php -s "tests.log"
+```
+
+Help:
+```
+php should help
 ```
