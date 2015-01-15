@@ -95,6 +95,9 @@ class ExecuteTestsCommand extends Command
                 $output->writeln("\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}");
             }
         }
+
+        $time = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
+        $output->writeln('Execution time: ' . round($time * 100) / 100);
     }
 
     protected function getFileExt($file)
