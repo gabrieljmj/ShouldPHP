@@ -1,0 +1,8 @@
+{
+    "ambients": [
+        "test.php"
+    ],
+    "config": {
+        "logfile": "tests.log"
+    }
+}
