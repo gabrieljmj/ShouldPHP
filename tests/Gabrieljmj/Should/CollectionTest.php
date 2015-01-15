@@ -11,15 +11,7 @@ namespace Test\Gabrieljmj\Should;
 
 use Gabrieljmj\Should\Collection;
 
-class CollectionTest extends \php
-/**
- * ShouldPHP
- *
- * @author Gabriel Jacinto <gamjj74@hotmail.com>
- * @status dev
- * @link   https://github.com/GabrielJMJ/ShouldPHP
- */
- Unit_Framework_TestCase
+class CollectionTest extends \PHPUnit_Framework_TestCase
 {
     public function testSettingTheArray()
     {

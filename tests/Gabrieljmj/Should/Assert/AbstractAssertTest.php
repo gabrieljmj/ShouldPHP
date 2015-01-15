@@ -9,15 +9,7 @@
  
 namespace Test\Gabrieljmj\Should\Assert;
 
-abstract class AbstractAssertTest extends \php
-/**
- * ShouldPHP
- *
- * @author Gabriel Jacinto <gamjj74@hotmail.com>
- * @status dev
- * @link   https://github.com/GabrielJMJ/ShouldPHP
- */
- Unit_Framework_TestCase
+abstract class AbstractAssertTest extends \PHPUnit_Framework_TestCase
 {
     protected function assertPreConditions()
     {

@@ -15,15 +15,7 @@ use Gabrieljmj\Should\Condition\TheClass\Be;
 use Gabrieljmj\Should\Assert\TheClass\Be\Equals;
 use Gabrieljmj\Should\Assert\TheClass\Be\Instance;
 
-class ShouldClassTest extends \php
-/**
- * ShouldPHP
- *
- * @author Gabriel Jacinto <gamjj74@hotmail.com>
- * @status dev
- * @link   https://github.com/GabrielJMJ/ShouldPHP
- */
- Unit_Framework_TestCase
+class ShouldClassTest extends \PHPUnit_Framework_TestCase
 {
     public function testSettingPropertiesBeAndHave()
     {

@@ -14,15 +14,7 @@ use Gabrieljmj\Should\Condition\TheMethod\Have;
 use Gabrieljmj\Should\Condition\TheMethod\Be;
 use Gabrieljmj\Should\Assert\TheMethod\Have\ArgumentsEqual;
 
-class ShouldMethodTest extends \php
-/**
- * ShouldPHP
- *
- * @author Gabriel Jacinto <gamjj74@hotmail.com>
- * @status dev
- * @link   https://github.com/GabrielJMJ/ShouldPHP
- */
- Unit_Framework_TestCase
+class ShouldMethodTest extends \PHPUnit_Framework_TestCase
 {
     public function testSettingPropertiesBeAndHave()
     {
