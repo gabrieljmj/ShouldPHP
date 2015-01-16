@@ -28,6 +28,11 @@ class Instance extends AbstractAssert
         $this->arg2 = $arg2;
     }
 
+    public function getTestedElement()
+    {
+        return $this->arg1;
+    }
+
     public function getDescription()
     {
         return 'Tests if the object is of this class or has this class as one of its parents';

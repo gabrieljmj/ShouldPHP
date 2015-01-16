@@ -39,6 +39,11 @@ class Equals extends AbstractAssert
         $this->arg2 = $arg2;
     }
 
+    public function getTestedElement()
+    {
+        return get_class($this->arg1);
+    }
+
     /**
      * @return string
      */

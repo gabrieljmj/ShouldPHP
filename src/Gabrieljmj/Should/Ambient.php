@@ -166,36 +166,26 @@ class Ambient implements AmbientInterface
             'method' => ['success' => 0, 'fail' => 0],
             'property' => ['success' => 0, 'fail' => 0]
         ];
-        
-        foreach ($classAssertList as $assert) {
-            $status = $assert->execute() ? 'success' : 'fail';
-            $report['class'][$status][] = ['description' => $assert->getDescription()];
-            $report['total']++;
-            $report['total']['class'][$status]++;
-            $report['total']['total']++;
-            $report['total']['all'][$status]++;
-        }
-        
-        foreach ($methodAssertList as $assert) {
-            $status = $assert->execute() ? 'success' : 'fail';
-            $report['method'][$status][] = ['description' => $assert->getDescription()];
-            $report['total']++;
-            $report['total']['method'][$status]++;
-            $report['total']['total']++;
-            $report['total']['all'][$status]++;
-        }
 
-        foreach ($propertyAssertList as $assert) {
+        $report = $this->createReportOfSomeType('class', $classAssertList, $report);
+        $report = $this->createReportOfSomeType('method', $methodAssertList, $report);
+        $report = $this->createReportOfSomeType('property', $propertyAssertList, $report);
+
+        return new Collection($report);
+    }
+
+    private function createReportOfSomeType($type, array $assertList, array $report) {
+        foreach ($assertList as $assert) {
             $nameEx = explode('\\', get_class($assert));
             $name = end($nameEx);
             $status = $assert->execute() ? 'success' : 'fail';
-            $report['property'][$status][] = ['description' => $assert->getDescription(), 'name' => $name];
+            $report[$type][$status][$assert->getTestedElement()][] = ['description' => $assert->getDescription(), 'name' => $name, 'failmsg' => $assert->getFailMessage()];
             $report['total']++;
-            $report['total']['property'][$status]++;
+            $report['total'][$type][$status]++;
             $report['total']['total']++;
             $report['total']['all'][$status]++;
         }
 
-        return new Collection($report);
+        return $report;
     }
 }

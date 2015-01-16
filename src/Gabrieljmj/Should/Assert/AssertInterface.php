@@ -12,6 +12,8 @@ namespace Gabrieljmj\Should\Assert;
 
 interface AssertInterface
 {
+    public function getTestedElement();
+
     public function getMessage();
 
     public function getFailMessage();

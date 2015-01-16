@@ -28,6 +28,11 @@ class ArgumentsEqual extends AbstractAssert
         $this->expectedArgs = $expectedArgs;
     }
 
+    public function getTestedElement()
+    {
+        return $this->class . '::' . $this->method;
+    }
+
     public function execute()
     {
         $ref = new \ReflectionMethod($this->class, $this->method);

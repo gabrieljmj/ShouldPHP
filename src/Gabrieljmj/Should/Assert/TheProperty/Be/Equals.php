@@ -38,6 +38,12 @@ class Equals extends AbstractAssert
         return false;
     }
 
+    public function getTestedElement()
+    {
+        $class = is_object($this->class) ? get_class($this->class) : $this->class;
+        return $class . '::$' . $this->property;
+    }
+
     public function getDescription()
     {
         return 'Tests if a class has a property with a certain value. If the property is not public, the default value will be used.';
@@ -45,6 +51,7 @@ class Equals extends AbstractAssert
 
     public function getFailMessage()
     {
-        return $this->execute() ? null : 'The property ' . $this->property . ' of the class ' . $this->class . ' is not equals ' . print_r($this->value, true);
+        $class = is_object($this->class) ? get_class($this->class) : $this->class;
+        return $this->execute() ? null : 'The property ' . $this->property . ' of the class ' . $class . ' is not equals ' . print_r($this->value, true);
     }
 }

@@ -53,6 +53,16 @@ class ExecuteTestsCommand extends Command
     {
         $file = $input->getArgument('file');
         $input->hasArgument('test_name') ? $testName = $input->getArgument('test_name') : null;
+        $output->writeln(" 
+ ____  _   _ _____ _   _ _    _____
+/  _ \| | | |  _  | | | | |  |  _  \ 
+| | |_| | | | | | | | | | |  | | \ |
+| |__ | |_| | | | | | | | |  | | | |
+|___ \|  _  | | | | | | | |  | | | |
+ _  | | | | | | | | | | | |  | | | | __      __
+| | | | | | | | | | | | | |  | | | ||  \|  ||  \
+| |_| | | | | |_| | |_| | |__| |_/ ||__/|__||__/
+\____/|_| |_|_____|_____|____|_____/|   |  ||\n");
         $output->writeln("\nREPORT\n--------------------------\n");
 
         if ($this->isDir($file)) {
@@ -122,7 +132,20 @@ class ExecuteTestsCommand extends Command
             $this->logger->info($report->serialize());
         }
 
-        $output->writeln($report->serialize() . "\n\n");
+        $name = $report['test'];
+        foreach ($report as $testType => $value) {
+            if (isset($report[$testType]['fail'])) {
+                foreach ($report[$testType]['fail'] as $element => $fails) {
+                    $output->writeln("Fail on tests of the {$testType} {$element}:\n");
+                    foreach ($fails as $key => $fail) {
+                        $n = $key + 1;
+                        $name = $fail['name'];
+                        $failmsg = $fail['failmsg'];
+                        $output->writeln("{$n}) {$name} - {$failmsg}\n");
+                    }
+                }
+            }
+        }
 
         return $report;
     }
