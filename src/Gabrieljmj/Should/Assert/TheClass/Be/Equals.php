@@ -29,7 +29,7 @@ class Equals extends AbstractAssert
      * @param object $arg1
      * @param object $arg2
      */
-    public function __construct(&$arg1, &$arg2)
+    public function __construct($arg1, $arg2)
     {
         if (!is_object($arg1) || !is_object($arg2)) {
             throw new InvalidArgumentException('Both arguments must be object');
