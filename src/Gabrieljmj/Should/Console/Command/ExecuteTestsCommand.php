@@ -39,7 +39,7 @@ class ExecuteTestsCommand extends Command
              ->addArgument(
                     'file',
                     InputArgument::REQUIRED,
-                    'Indicate the file that contains the tests ambients'
+                    'Indicate the file or the path that contains the tests ambients'
              )
              ->addOption(
                     'save',
@@ -53,46 +53,37 @@ class ExecuteTestsCommand extends Command
     {
         $file = $input->getArgument('file');
         $input->hasArgument('test_name') ? $testName = $input->getArgument('test_name') : null;
-        $ext = $this->getFileExt($file);
-        $testsTotal = 0;
-
         $output->writeln("\nREPORT\n--------------------------\n");
 
-        if ($ext === 'php') {
-            $ambient = $this->validateFile($file);
+        if ($this->isDir($file)) {
+            $dir = $file;
+            $ambientFiles = $this->getAmbientFilesFromDir($dir);
 
-            $report = $this->runTest($ambient, $input, $output);
-            $total = $report['total']['total'];
-            $success = $report['total']['all']['success'];
-            $fail = $report['total']['all']['fail'];
-
-            $output->writeln("\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}");
+            $result = $this->executeArrayOfTests($ambientFiles, $input, $output);
         } else {
-            if (file_exists($file)) {
-                $file = file_get_contents($file);
-                $json = json_decode($file);
-                $ambientFiles = $json->ambients;
-                $ambients = [];
-                $reportE['total'] = 0;
-                $reportE['success'] = 0;
-                $reportE['fail'] = 0;
+            $ext = $this->getFileExt($file);
 
-                foreach ($ambientFiles as $ambientFile) {
-                    $ambients[] = $this->validateFile($ambientFile);
-                }
+            if ($ext === 'php') {
+                $ambient = $this->validateFile($file);
 
-                foreach ($ambients as $ambient) {
-                    $report = $this->runTest($ambient, $input, $output);
-                    $reportE['total'] = $reportE['total'] + $report['total']['total'];
-                    $reportE['success'] = $reportE['success'] + $report['total']['all']['success'];
-                    $reportE['fail'] = $reportE['fail'] + $report['total']['all']['fail'];
-                }
-
-                $success = $reportE['success'];
-                $fail = $reportE['fail'];
-                $total = $reportE['total'];
+                $report = $this->runTest($ambient, $input, $output);
+                $total = $report['total']['total'];
+                $success = $report['total']['all']['success'];
+                $fail = $report['total']['all']['fail'];
 
                 $output->writeln("\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}");
+            } elseif ($ext === 'json') {
+                if (file_exists($file)) {
+                    $fileContent = file_get_contents($file);
+                    $json = json_decode($fileContent);
+                    $ambientFiles = $json->ambients;
+
+                    $result = $this->executeArrayOfTests($ambientFiles, $input, $output);
+                    $total = $result['total'];
+                    $success = $result['success'];
+                    $fail = $result['fail'];
+                    $output->writeln("\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}");
+                }
             }
         }
 
@@ -131,8 +122,57 @@ class ExecuteTestsCommand extends Command
             $this->logger->info($report->serialize());
         }
 
-        $output->writeln($report->serialize());
+        $output->writeln($report->serialize() . "\n\n");
 
         return $report;
+    }
+
+    protected function executeArrayOfTests(array $ambientFiles, InputInterface $input, OutputInterface $output)
+    {
+        $ambients = [];
+        $reportE['total'] = 0;
+        $reportE['success'] = 0;
+        $reportE['fail'] = 0;
+
+        foreach ($ambientFiles as $ambientFile) {
+            if ($this->isDir($ambientFile)) {
+                $result = $this->executeArrayOfTests($this->getAmbientFilesFromDir($ambientFile), $input, $output);
+                $reportE['total'] += $result['total'];
+                $reportE['success'] += $result['success'];
+                $reportE['fail'] += $result['fail'];
+            } else {
+                $ambients[] = $this->validateFile($ambientFile);
+            }
+        }
+
+        foreach ($ambients as $ambient) {
+            $report = $this->runTest($ambient, $input, $output);
+            $reportE['total'] = $reportE['total'] + $report['total']['total'];
+            $reportE['success'] = $reportE['success'] + $report['total']['all']['success'];
+            $reportE['fail'] = $reportE['fail'] + $report['total']['all']['fail'];
+        }
+
+        return $reportE;
+    }
+
+    protected function isDir($dir)
+    {
+        return substr($dir, -1) == '/';
+    }
+
+    protected function getAmbientFilesFromDir($dir)
+    {
+        if (!is_dir($dir) || !is_readable($dir)) {
+            throw new Exception('Directory not exists or is not readable: ' . $dir);
+        }
+
+        $files = scandir($dir);
+        unset($files[0], $files[1]);
+
+        foreach ($files as $key => $file) {
+            $files[$key] = $dir . DIRECTORY_SEPARATOR . $file;
+        }
+
+        return $files;
     }
 }

@@ -14,12 +14,4 @@ use Gabrieljmj\Should\ShouldInterface;
 
 abstract class AbstractShould implements ShouldInterface
 {
-    public function __set($property, $value)
-    {
-        if ($property === 'have' || $property === 'be') {
-            throw new InvalidArgumentException(sprintf('You can not set the properties Gabrieljmj\Should\%s::$have and Gabrieljmj\Should\%s::$be', get_class($this), get_class($this)));
-        }
-
-        $this->{$property} = $value;
-    }
 }

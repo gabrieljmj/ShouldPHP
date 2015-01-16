@@ -20,4 +20,9 @@ class ShouldClass extends AbstractShould
         $this->have = new Have($class);
         $this->be = new Be($class);
     }
+
+    public function getAssertList()
+    {
+        return array_merge($this->have->getAssertList(), $this->be->getAssertList());
+    }
 }

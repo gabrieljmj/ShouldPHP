@@ -21,4 +21,9 @@ class ShouldMethod extends AbstractShould
         $this->have = new Have($class, $method);
         $this->be = new Be($class, $method);
     }
+
+    public function getAssertList()
+    {
+        return array_merge($this->have->getAssertList(), $this->be->getAssertList());
+    }
 }
