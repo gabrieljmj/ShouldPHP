@@ -157,6 +157,7 @@ class ExecuteTestsCommand extends Command
         }
 
         $name = $report['test'];
+        
         foreach ($report as $testType => $value) {
             if (isset($report[$testType]['fail'])) {
                 foreach ($report[$testType]['fail'] as $element => $fails) {
@@ -183,6 +184,7 @@ class ExecuteTestsCommand extends Command
     protected function executeArrayOfTests(array $ambientFiles, InputInterface $input, OutputInterface $output)
     {
         $ambients = [];
+        $reportE = [];
         $reportE['total'] = 0;
         $reportE['success'] = 0;
         $reportE['fail'] = 0;
