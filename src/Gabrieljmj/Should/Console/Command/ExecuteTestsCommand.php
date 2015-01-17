@@ -80,7 +80,7 @@ class ExecuteTestsCommand extends Command
             $ambientFiles = $this->getAmbientFilesFromDir($dir);
 
             $result = $this->executeArrayOfTests($ambientFiles, $input, $output);
-            $this->showTests($result);
+            $this->showTests($result, $output);
         } else {
             $ext = $this->getFileExt($file);
 
@@ -100,7 +100,7 @@ class ExecuteTestsCommand extends Command
                     $ambientFiles = $json->ambients;
 
                     $result = $this->executeArrayOfTests($ambientFiles, $input, $output);
-                    $this->showTests($result);
+                    $this->showTests($result, $output);
                 }
             }
         }
@@ -237,7 +237,7 @@ class ExecuteTestsCommand extends Command
         return $files;
     }
 
-    protected function showTests(array $report, OutputInterface $output)
+    protected function showTests(array $result, OutputInterface $output)
     {
         $total = $result['total'];
         $success = $result['success'];
