@@ -80,6 +80,7 @@ class ExecuteTestsCommand extends Command
             $ambientFiles = $this->getAmbientFilesFromDir($dir);
 
             $result = $this->executeArrayOfTests($ambientFiles, $input, $output);
+            $this->showTests($result);
         } else {
             $ext = $this->getFileExt($file);
 
@@ -99,10 +100,7 @@ class ExecuteTestsCommand extends Command
                     $ambientFiles = $json->ambients;
 
                     $result = $this->executeArrayOfTests($ambientFiles, $input, $output);
-                    $total = $result['total'];
-                    $success = $result['success'];
-                    $fail = $result['fail'];
-                    $output->writeln("\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}");
+                    $this->showTests($result);
                 }
             }
         }
@@ -157,7 +155,7 @@ class ExecuteTestsCommand extends Command
         }
 
         $name = $report['test'];
-        
+
         foreach ($report as $testType => $value) {
             if (isset($report[$testType]['fail'])) {
                 foreach ($report[$testType]['fail'] as $element => $fails) {
@@ -237,5 +235,13 @@ class ExecuteTestsCommand extends Command
         }
 
         return $files;
+    }
+
+    protected function showTests(array $report, OutputInterface $output)
+    {
+        $total = $result['total'];
+        $success = $result['success'];
+        $fail = $result['fail'];
+        $output->writeln("\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}");
     }
 }
