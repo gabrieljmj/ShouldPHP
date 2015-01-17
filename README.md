@@ -3,6 +3,8 @@ ShouldPHP
 
 In-development.
 
+###Quick examples of use
+
 ```php
 #test.php
 
@@ -10,6 +12,7 @@ use Gabrieljmj\Should\Ambient;
 
 $a = new Ambient('test');
 $a->theClass('Employee')->should->be->instance('Person');
+$a->theProperty('Employee', 'role')->should->be->equals('Conserje');
 
 return $a;
 ```
@@ -25,7 +28,8 @@ Several:
     "ambients": [
         "test.php",
         "test2.php",
-        "test3.php"
+        "test3.php",
+        "othertests/"
     ]
 }
 ```
