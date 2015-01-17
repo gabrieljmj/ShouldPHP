@@ -15,8 +15,6 @@ use \Serializable;
 
 class Collection extends ArrayCollection implements Serializable
 {
-    private $elements;
-
     public function __construct(array $elements)
     {
         parent::__construct($elements);
