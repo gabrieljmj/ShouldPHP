@@ -25,8 +25,14 @@ use \Exception;
 
 class ExecuteTestsCommand extends Command
 {
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
     private $logger;
 
+    /**
+     * @param \Psr\Log\LoggerInterface @logger
+     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -49,6 +55,10 @@ class ExecuteTestsCommand extends Command
              );
     }
 
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $file = $input->getArgument('file');
@@ -101,12 +111,20 @@ class ExecuteTestsCommand extends Command
         $output->writeln('Execution time: ' . round($time * 100) / 100);
     }
 
+    /**
+     * @param string $file
+     * @return string
+     */
     protected function getFileExt($file)
     {
         $e = explode('.', $file);
         return end($e);
     }
 
+    /**
+     * @param string $file
+     * @return \Gabrieljmj\Should\AmbientInterface
+     */
     protected function validateFile($file)
     {
         if (!file_exists($file)) {
@@ -122,6 +140,12 @@ class ExecuteTestsCommand extends Command
         return $ambientInstance;
     }
 
+    /**
+     * @param \Gabrieljmj\Should\AmbientInterface               $ambient
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return \Gabrieljmj\Should\Collection
+     */
     protected function runTest(AmbientInterface $ambient, InputInterface $input, OutputInterface $output)
     {
         $ambient->run();
@@ -150,6 +174,12 @@ class ExecuteTestsCommand extends Command
         return $report;
     }
 
+    /**
+     * @param array $ambientFiles
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return array
+     */
     protected function executeArrayOfTests(array $ambientFiles, InputInterface $input, OutputInterface $output)
     {
         $ambients = [];
@@ -178,11 +208,19 @@ class ExecuteTestsCommand extends Command
         return $reportE;
     }
 
+    /**
+     * @param string $dir
+     * @return boolean
+     */
     protected function isDir($dir)
     {
         return substr($dir, -1) == '/';
     }
 
+    /**
+     * @param string $dir
+     * @return array
+     */
     protected function getAmbientFilesFromDir($dir)
     {
         if (!is_dir($dir) || !is_readable($dir)) {
