@@ -2,6 +2,8 @@ ShouldPHP
 =========
 
 In-development.
+*A poor documentation below
+*Maybe has bugs
 
 ###Quick examples of use
 
@@ -29,13 +31,33 @@ Several:
         "test.php",
         "test2.php",
         "test3.php",
-        "othertests/"
+        "othertests/",
+        "namespace\Class"
     ]
 }
 ```
 ```
 php bin/should execute should.json
 ```
+
+Ambient object (tests suffix: ```test```):
+```php
+namespace Namespace;
+
+use Gabrieljmj\Should\Ambient;
+
+class YourAmbient extends Ambient
+{
+    public function testInstance()
+    {
+        $this->theClass(new \stdClass)->should->be->equals(new \stdClass);
+    }
+}
+```
+
+Executing ambient (use ```/``` instead ```\```):
+```php bin/should execute Namespace/YourAmbient
+
 
 Saving logs (command ```-s|--save```):
 ```

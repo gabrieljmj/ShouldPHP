@@ -1,7 +1,6 @@
 {
     "ambients": [
-        "test.php",
-        "s/"
+        "s\\TestAmbient"
     ],
     "config": {
         "logfile": "tests.log"

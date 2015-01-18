@@ -4,3 +4,5 @@ composer.phar
 phpunit
 tests.log
 test.php
+s/
+should

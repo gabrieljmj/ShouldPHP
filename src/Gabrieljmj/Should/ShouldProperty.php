@@ -10,9 +10,10 @@
  
 namespace Gabrieljmj\Should;
 
+use Gabrieljmj\Should\ShouldInterface;
 use Gabrieljmj\Should\Condition\TheProperty\Be;
 
-class ShouldProperty extends AbstractShould
+class ShouldProperty implements ShouldInterface
 {
     public $be;
 

@@ -14,4 +14,10 @@ use Gabrieljmj\Should\Condition\TheClass\AbstractClassCondition;
 
 class Have extends AbstractClassCondition
 {
+    public function theProperty($property, $message = null)
+    {
+        $instance = new TheProperty($this->class, $property);
+        $instance->setMessage($message);
+        $this->addAssert($instance);
+    }
 }

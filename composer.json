@@ -3,7 +3,8 @@
     "autoload": {
         "psr-4": {
             "Gabrieljmj\\Should\\": "src/Gabrieljmj/Should/",
-            "Test\\": "tests/"
+            "Test\\": "tests/",
+            "s\\": "s/"
         }
     },
     "require": {

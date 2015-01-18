@@ -18,15 +18,15 @@ class Be extends AbstractClassCondition
 {
     public function equals($arg, $message = null)
     {
-        $Assert = new Equals($this->class, $arg);
-        $Assert->setMessage($message);
-        $this->addAssert($Assert);
+        $assert = new Equals($this->class, $arg);
+        $assert->setMessage($message);
+        $this->addAssert($assert);
     }
     
     public function instance($arg, $message = null)
     {
-        $Assert = new Instance($this->class, $arg);
-        $Assert->setMessage($message);
-        $this->addAssert($Assert);
+        $assert = new Instance($this->class, $arg);
+        $assert->setMessage($message);
+        $this->addAssert($assert);
     }
 }

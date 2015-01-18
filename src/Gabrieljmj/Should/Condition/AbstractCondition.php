@@ -15,15 +15,15 @@ use Gabrieljmj\Should\Assert\AssertInterface;
 
 abstract class AbstractCondition implements ConditionInterface
 {
-    protected $AssertList = [];
+    protected $assertList = [];
     
     public function getAssertList()
     {
-       return $this->AssertList; 
+       return $this->assertList; 
     }
     
-    public function addAssert(AssertInterface $Assert)
+    public function addAssert(AssertInterface $assert)
     {
-        $this->AssertList[] = $Assert;
+        $this->assertList[] = $assert;
     }
 }

@@ -17,9 +17,6 @@ interface AmbientInterface
      */
     public function getName();
     
-    /**
-     * @throws AssertException
-    */
     public function run();
     
     /**

@@ -14,7 +14,7 @@ use Gabrieljmj\Should\Assert\AbstractAssert;
 
 class Instance extends AbstractAssert
 {
-    protected $arg1;
+    private $arg1;
     
     protected $arg2;
     

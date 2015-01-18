@@ -10,11 +10,16 @@
  
 namespace Gabrieljmj\Should;
 
+use Gabrieljmj\Should\ShouldInterface;
 use Gabrieljmj\Should\Condition\TheMethod\Be;
 use Gabrieljmj\Should\Condition\TheMethod\Have;
 
-class ShouldMethod extends AbstractShould
+class ShouldMethod implements ShouldInterface
 {
+    public $have;
+
+    public $be;
+
     public function __construct($class, $method)
     {
         $class = is_object($class) ? get_class($class) : $class;

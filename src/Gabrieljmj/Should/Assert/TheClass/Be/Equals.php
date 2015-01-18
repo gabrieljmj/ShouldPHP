@@ -18,12 +18,12 @@ class Equals extends AbstractAssert
     /**
      * @var object
      */
-    protected $arg1;
+    private $arg1;
     
     /**
      * @var object
      */
-    protected $arg2;
+    private $arg2;
     
     /**
      * @param object $arg1

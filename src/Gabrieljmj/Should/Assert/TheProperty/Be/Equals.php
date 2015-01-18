@@ -14,6 +14,12 @@ use Gabrieljmj\Should\Assert\AbstractAssert;
 
 class Equals extends AbstractAssert
 {
+    private $class;
+
+    private $property;
+
+    private $value;
+
     public function __construct($class, $property, $value)
     {
         $this->class = $class;

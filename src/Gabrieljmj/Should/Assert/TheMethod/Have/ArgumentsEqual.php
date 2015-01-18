@@ -53,6 +53,6 @@ class ArgumentsEqual extends AbstractAssert
 
     public function getFailMessage()
     {
-        
+        return $this->execute() ? null : 'The arguments of the method ' . $class . '::' . $this->method . ' are incorrect';
     }
 }

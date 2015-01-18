@@ -15,6 +15,11 @@ use Gabrieljmj\Should\ShouldInterface;
 abstract class AbstractType
 {
     /**
+     * @var \Gabrieljmj\Should\ShouldInterface
+     */
+    protected $should;
+
+    /**
      * @param string $property
      * @param mixed  $value
      */
