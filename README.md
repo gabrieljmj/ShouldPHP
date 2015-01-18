@@ -32,7 +32,7 @@ Several:
         "test2.php",
         "test3.php",
         "othertests/",
-        "namespace\Class"
+        "Namespace\\YourAmbient"
     ]
 }
 ```
