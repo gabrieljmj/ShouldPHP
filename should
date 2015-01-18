@@ -6,8 +6,10 @@ use Symfony\Component\Console\Application;
 use Gabrieljmj\Should\Console\Command\ExecuteTestsCommand;
 use Gabrieljmj\Should\Console\Command\HelpCommand;
 use Monolog\Logger;
+use Gabrieljmj\Should\Template\StandardTemplate;
 
 $command = new ExecuteTestsCommand();
+$command->setTemplate(new StandardTemplate());
 $command->setLogger(new Logger('tests'));
 $app = new Application();
 $app->add($command);

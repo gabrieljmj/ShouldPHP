@@ -19,7 +19,7 @@ use Gabrieljmj\Should\TheMethod;
 use Gabrieljmj\Should\TheProperty;
 use Gabrieljmj\Should\TheParameter;
 use Gabrieljmj\Should\Collection;
-use \ReflectionClass;
+use Gabrieljmj\Should\Runner\RunnerInterface;
 
 class Ambient implements AmbientInterface
 {
@@ -69,50 +69,38 @@ class Ambient implements AmbientInterface
     public function theClass($class, array $args = [])
     {
         $className = $this->getClassAsString($class);
-        
-        if (!isset($this->classCollection[$className])) {
-            if (!is_object($class)) {
-                $ref = new ReflectionClass($class);
-                $class = $ref->newInstanceArgs($args);
-            }
-            
-            $should = new ShouldClass($class);
-            $this->classCollection[$className] = new TheClass($should);
+
+        if (!is_object($class)) {
+            $ref = new \ReflectionClass($class);
+            $class = $ref->newInstanceArgs($args);
         }
         
-        return $this->classCollection[$className];
+        return $this->create('class', [$class], $className);
     }
     
     /**
-     * @param string $class
-     * @param string $method
+     * @param string|object $class
+     * @param string        $method
      * @return \Gabrieljmj\Should\Method
      */
     public function theMethod($class, $method)
     {
-        if (!isset($this->methodCollection[$class . ':' . $method])) {
-            $should = new ShouldMethod($class, $method);
-            $this->methodCollection[$class . ':' . $method] = new TheMethod($should);
-        }
-        
-        return $this->methodCollection[$class . ':' . $method];
+        $className = $this->getClassAsString($class);
+        $index = $className . ':' . $method;
+
+        return $this->create('method', func_get_args(), $index);
     }
 
     /**
-     * @param string $class
-     * @param string $property
+     * @param string|object  $class
+     * @param string         $property
      */
     public function theProperty($class, $property)
     {
         $className = $this->getClassAsString($class);
         $index = $className . ':' . $property;
 
-        if (!isset($this->propertyCollection[$index])) {
-            $should = new ShouldProperty($class, $property);
-            $this->propertyCollection[$index] = new TheProperty($should);
-        }
-
-        return $this->propertyCollection[$index];
+        return $this->create('property', func_get_args(), $index);
     }
 
     public function theParameter($class, $method, $parameter)
@@ -120,12 +108,7 @@ class Ambient implements AmbientInterface
         $className = $this->getClassAsString($class);
         $index = $className . ':' . $method . ':' . $parameter;
 
-        if (!isset($this->parameterCollection[$index])) {
-            $should = new ShouldParameter($class, $method, $parameter);
-            $this->parameterCollection[$index] = new TheParameter($should);
-        }
-
-        return $this->parameterCollection[$index];
+        return $this->create('parameter', func_get_args(), $index);
     }
     
     /**
@@ -154,7 +137,7 @@ class Ambient implements AmbientInterface
      */
     public function getName()
     {
-        return $this->name;
+        return $this->name === null ? get_class($this) : $this->name;
     }
     
     /**
@@ -162,7 +145,7 @@ class Ambient implements AmbientInterface
      * @param array $methodAssertList
      * @return \Gabrieljmj\Should\Report
      */
-    protected function createReport(array $classAssertList, array $methodAssertList, array $propertyAssertList, array $parameterAssertList)
+    private function createReport(array $classAssertList, array $methodAssertList, array $propertyAssertList, array $parameterAssertList)
     {
         $report = [];
         $report['test'] = $this->getName();
@@ -208,12 +191,12 @@ class Ambient implements AmbientInterface
      * @param string|object $class
      * @return string
      */
-    protected function getClassAsString($class)
+    private function getClassAsString($class)
     {
         return is_object($class) ? get_class($class) : $class;
     }
 
-    protected function createAssertList(array $collection)
+    private function createAssertList(array $collection)
     {
         $assertList = [];
 
@@ -224,5 +207,22 @@ class Ambient implements AmbientInterface
         }
 
         return $assertList;
+    }
+
+    private function create($param, array $shouldParams, $index)
+    {
+        $shouldClass = '\Gabrieljmj\Should\Should' . ucfirst($param);
+        $typeClass = '\Gabrieljmj\Should\The' . ucfirst($param);
+        $collectionVarName = strtolower($param) . 'Collection';
+
+        if (!isset($this->{$collectionVarName}[$index])) {
+            $shoudlRef = new \ReflectionClass($shouldClass);
+            $should = $shoudlRef->newInstanceArgs($shouldParams);
+            $typeRef = new \ReflectionClass($typeClass);
+
+            $this->{$collectionVarName}[$index] = $typeRef->newInstance($should);
+        }
+
+        return $this->{$collectionVarName}[$index];
     }
 }

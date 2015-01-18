@@ -12,7 +12,7 @@ namespace Gabrieljmj\Should\Assert\TheProperty\Be;
 
 use Gabrieljmj\Should\Assert\AbstractAssert;
 
-class Equals extends AbstractAssert
+class Equal extends AbstractAssert
 {
     private $class;
 
@@ -58,6 +58,6 @@ class Equals extends AbstractAssert
     public function getFailMessage()
     {
         $class = is_object($this->class) ? get_class($this->class) : $this->class;
-        return $this->execute() ? null : 'The property ' . $this->property . ' of the class ' . $class . ' is not equals ' . print_r($this->value, true);
+        return $this->execute() ? null : 'The property ' . $this->property . ' of the class ' . $class . ' is not equal to ' . print_r($this->value, true);
     }
 }

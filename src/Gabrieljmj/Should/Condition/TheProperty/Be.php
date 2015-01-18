@@ -11,13 +11,13 @@
 namespace Gabrieljmj\Should\Condition\TheProperty;
 
 use Gabrieljmj\Should\Condition\TheProperty\AbstractPropertyCondition;
-use Gabrieljmj\Should\Assert\TheProperty\Be\Equals;
+use Gabrieljmj\Should\Assert\TheProperty\Be\Equal;
 
 class Be extends AbstractPropertyCondition
 {
-    public function equals($value, $message = null)
+    public function equal($value, $message = null)
     {
-        $instance = new Equals($this->class, $this->property, $value);
+        $instance = new Equal($this->class, $this->property, $value);
         $instance->setMessage($message);
         $this->addAssert($instance);
     }

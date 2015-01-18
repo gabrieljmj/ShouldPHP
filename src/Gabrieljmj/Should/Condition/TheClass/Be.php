@@ -11,14 +11,14 @@
 namespace Gabrieljmj\Should\Condition\TheClass;
 
 use Gabrieljmj\Should\Condition\TheClass\AbstractClassCondition;
-use Gabrieljmj\Should\Assert\TheClass\Be\Equals;
+use Gabrieljmj\Should\Assert\TheClass\Be\Equal;
 use Gabrieljmj\Should\Assert\TheClass\Be\Instance;
 
 class Be extends AbstractClassCondition
 {
-    public function equals($arg, $message = null)
+    public function equal($arg, $message = null)
     {
-        $assert = new Equals($this->class, $arg);
+        $assert = new Equal($this->class, $arg);
         $assert->setMessage($message);
         $this->addAssert($assert);
     }

@@ -13,7 +13,7 @@ namespace Gabrieljmj\Should\Assert\TheClass\Be;
 use Gabrieljmj\Should\Assert\AbstractAssert;
 use \InvalidArgumentException;
 
-class Equals extends AbstractAssert
+class Equal extends AbstractAssert
 {
     /**
      * @var object

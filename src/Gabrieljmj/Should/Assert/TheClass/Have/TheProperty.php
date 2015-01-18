@@ -36,7 +36,7 @@ class TheProperty extends AbstractAssert
 
     public function getTestedElement()
     {
-        return $this->class . '::$' . $this->property;
+        return $this->class;;
     }
 
     /**

@@ -21,6 +21,8 @@ use Psr\Log\LoggerInterface;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Gabrieljmj\Should\AmbientInterface;
+use Gabrieljmj\Should\Template\TemplateInterface;
+use Gabrieljmj\Should\Collection;
 use \Exception;
 
 class ExecuteTestsCommand extends Command
@@ -39,6 +41,16 @@ class ExecuteTestsCommand extends Command
      * @var \Symfony\Component\Console\Output\OutputInterface
      */
     private $output;
+
+    /**
+     * @var \Gabrieljmj\Should\Collection
+     */
+    private $report;
+
+    public function setTemplate(TemplateInterface $template)
+    {
+        $this->template = $template;
+    }
 
     /**
      * @param \Psr\Log\LoggerInterface $logger
@@ -66,8 +78,8 @@ class ExecuteTestsCommand extends Command
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface   $this->input
-     * @param \Symfony\Component\Console\Output\OutputInterface $this->output
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -76,59 +88,35 @@ class ExecuteTestsCommand extends Command
         $file = $this->input->getArgument('file');
         echo str_replace('/', '\\', $file);
         $this->input->hasArgument('test_name') ? $testName = $this->input->getArgument('test_name') : null;
-        $this->output->writeln(" 
- ____  _   _ _____ _   _ _    _____
-/  _ \| | | |  _  | | | | |  |  _  \ 
-| | |_| | | | | | | | | | |  | | \ |
-| |__ | |_| | | | | | | | |  | | | |
-|___ \|  _  | | | | | | | |  | | | |
- _  | | | | | | | | | | | |  | | | | __      __
-| | | | | | | | | | | | | |  | | | ||  \|  ||  \
-| |_| | | | | |_| | |_| | |__| |_/ ||__/|__||__/
-\____/|_| |_|_____|_____|____|_____/|   |  ||\n");
-        $this->output->writeln("\nREPORT\n--------------------------\n");
 
         if ($this->isDir($file)) {
             $dir = $file;
             $ambientFiles = $this->getAmbientFilesFromDir($dir);
 
-            $result = $this->executeArrayOfTests($ambientFiles);
-            $this->showTests($result, $this->output);
+            $this->executeArrayOfTests($ambientFiles);
         } else {
             $ext = $this->getFileExt($file);
 
             if ($ext === 'php') {
                 $ambient = $this->validateFile($file);
 
-                $report = $this->runTest($ambient);
-                $total = $report['total']['total'];
-                $success = $report['total']['all']['success'];
-                $fail = $report['total']['all']['fail'];
-
-                $this->output->writeln("\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}");
+                $this->runTest($ambient);
             } elseif ($ext === 'json') {
                 if (file_exists($file)) {
                     $fileContent = file_get_contents($file);
                     $json = json_decode($fileContent);
                     $ambientFiles = $json->ambients;
 
-                    $result = $this->executeArrayOfTests($ambientFiles);
-                    $this->showTests($result, $this->output);
+                    $this->executeArrayOfTests($ambientFiles);
                 }
             } elseif (class_exists(str_replace('/', '\\', $file))) {
-                    $file = str_replace('/', '\\', $file);
-                    $report = $this->executeAmbientObject($file);
-                    $total = $report['total'];
-                    $success = $report['success'];
-                    $fail = $report['fail'];
-                    $executedMethods = $report['executedMethods'];
-
-                    $this->output->writeln("\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}\nExecuted methods: {$executedMethods}");
+                $file = str_replace('/', '\\', $file);
+                $this->executeAmbientObject($file);
             }
         }
 
-        $time = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
-        $this->output->writeln('Execution time: ' . round($time * 100) / 100);
+        $report = $this->report instanceof Collection ? $this->report : new Collection($this->report);
+        $output->writeln($this->template->render($report));
     }
 
     /**
@@ -176,21 +164,21 @@ class ExecuteTestsCommand extends Command
 
         $name = $report['test'];
 
+        if ($this->report === null) {
+            $this->report = $report;
+        }
+
         foreach ($report as $testType => $value) {
             if (isset($report[$testType]['fail'])) {
                 foreach ($report[$testType]['fail'] as $element => $fails) {
-                    $this->output->writeln("Fail on tests of the {$testType} {$element}:\n");
-                    foreach ($fails as $key => $fail) {
-                        $n = $key + 1;
-                        $name = $fail['name'];
-                        $failmsg = $fail['failmsg'];
-                        $this->output->writeln("{$n}) {$name} - {$failmsg}\n");
-                    }
+                    $this->report[$testType]['fail'][$element] = $fails;
+                }
+
+                foreach ($report[$testType]['success'] as $element => $successes) {
+                    $this->report[$testType]['success'][$element] = $successes;
                 }
             }
         }
-
-        return $report;
     }
 
     /**
@@ -200,22 +188,18 @@ class ExecuteTestsCommand extends Command
     private function executeArrayOfTests(array $ambientFiles)
     {
         $ambients = [];
-        $reportE = [];
-        $reportE['total'] = 0;
-        $reportE['success'] = 0;
-        $reportE['fail'] = 0;
 
         foreach ($ambientFiles as $ambientFile) {
             if ($this->isDir($ambientFile)) {
-                $result = $this->executeArrayOfTests($this->getAmbientFilesFromDir($ambientFile));
-                $reportE['total'] += $result['total'];
-                $reportE['success'] += $result['success'];
-                $reportE['fail'] += $result['fail'];
+                $report = $this->executeArrayOfTests($this->getAmbientFilesFromDir($ambientFile));
+                $this->report['total']['total'] += $report['total']['total'];
+                $this->report['total']['all']['success'] += $report['total']['all']['success'];
+                $this->report['total']['all']['success'] += $report['total']['all']['fail'];
             } elseif (class_exists($ambientFile)) {
-                $result = $this->executeAmbientObject($ambientFile);
-                $reportE['total'] += $result['total'];
-                $reportE['success'] += $result['success'];
-                $reportE['fail'] += $result['fail'];
+                $report = $this->executeAmbientObject($ambientFile);
+                $this->report['total']['total'] += $report['total']['total'];
+                $this->report['total']['all']['success'] += $report['total']['all']['success'];
+                $this->report['total']['all']['success'] += $report['total']['all']['fail'];
             } else {
                 $ambients[] = $this->validateFile($ambientFile);
             }
@@ -223,12 +207,10 @@ class ExecuteTestsCommand extends Command
 
         foreach ($ambients as $ambient) {
             $report = $this->runTest($ambient);
-            $reportE['total'] += $report['total']['total'];
-            $reportE['success'] += $report['total']['all']['success'];
-            $reportE['fail'] += $report['total']['all']['fail'];
+            $this->report['total']['total'] += $report['total']['total'];
+            $this->report['total']['all']['success'] += $report['total']['all']['success'];
+            $this->report['total']['all']['success'] += $report['total']['all']['fail'];
         }
-
-        return $reportE;
     }
 
     /**
@@ -284,24 +266,6 @@ class ExecuteTestsCommand extends Command
             }
         }
 
-        $report = $this->runTest($instance);
-
-        return [
-            'total' => $report['total']['total'],
-            'success' =>  $report['total']['all']['success'],
-            'fail' => $report['total']['all']['fail'],
-            'executedMethods' => $executedMethods
-        ];
-    }
-
-    /**
-     * @param array $result
-     */
-    private function showTests(array $result)
-    {
-        $total = $result['total'];
-        $success = $result['success'];
-        $fail = $result['fail'];
-        $this->output->writeln("\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}");
+        return $this->runTest($instance);
     }
 }

@@ -11,6 +11,7 @@
 namespace Gabrieljmj\Should\Condition\TheClass;
 
 use Gabrieljmj\Should\Condition\TheClass\AbstractClassCondition;
+use Gabrieljmj\Should\Assert\TheClass\Have\TheProperty;
 
 class Have extends AbstractClassCondition
 {
