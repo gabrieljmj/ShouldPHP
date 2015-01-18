@@ -56,7 +56,7 @@ class YourAmbient extends Ambient
 ```
 
 Executing ambient (use ```/``` instead ```\```):
-```php bin/should execute Namespace/YourAmbient
+```php bin/should execute Namespace/YourAmbient```
 
 
 Saving logs (command ```-s|--save```):
