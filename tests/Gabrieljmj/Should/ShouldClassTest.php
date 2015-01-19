@@ -13,7 +13,7 @@ namespace Test\Gabrieljmj\Should;
 use Gabrieljmj\Should\ShouldClass;
 use Gabrieljmj\Should\Condition\TheClass\Have;
 use Gabrieljmj\Should\Condition\TheClass\Be;
-use Gabrieljmj\Should\Assert\TheClass\Be\Equals;
+use Gabrieljmj\Should\Assert\TheClass\Be\Equal;
 use Gabrieljmj\Should\Assert\TheClass\Be\Instance;
 
 class ShouldClassTest extends \PHPUnit_Framework_TestCase
@@ -34,9 +34,9 @@ class ShouldClassTest extends \PHPUnit_Framework_TestCase
         $i = new \stdClass;
         $i2 = new \stdClass;
         $should = new ShouldClass($i);
-        $should->be->equals($i2);
+        $should->be->equal($i2);
         $should->be->instance('\stdClass');
-        $assert1 = new Equals($i, $i2);
+        $assert1 = new Equal($i, $i2);
         $assert2 = new Instance($i, '\stdClass');
         $assertList = $should->getAssertList();
 

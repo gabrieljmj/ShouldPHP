@@ -11,9 +11,9 @@
 namespace Test\Gabrieljmj\Should\Assert\TheClass\Be;
 
 use Test\Gabrieljmj\Should\Assert\AbstractAssertTest;
-use Gabrieljmj\Should\Assert\TheClass\Be\Equals;
+use Gabrieljmj\Should\Assert\TheClass\Be\Equal;
 
-class EqualsTest extends AbstractAssertTest
+class EqualTest extends AbstractAssertTest
 {
     public function testExecutingWithNotEqualsReturnsFalseBoolean()
     {
@@ -33,7 +33,7 @@ class EqualsTest extends AbstractAssertTest
     {
         $obj1 = new \stdClass;
         $obj2 = new \stdClass;
-        return new Equals($obj1, $obj2);
+        return new Equal($obj1, $obj2);
     }
 
     protected function getFailureInstance()
@@ -41,7 +41,7 @@ class EqualsTest extends AbstractAssertTest
         $obj1 = new \stdClass;
         $obj2 = new \stdClass;
         $obj2->foo = 'bar';
-        return new Equals($obj1, $obj2);
+        return new Equal($obj1, $obj2);
     }
 
     protected function getFailureMessage()
