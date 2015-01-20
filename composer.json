@@ -1,5 +1,14 @@
 {
     "name": "gabrieljmj/should-php",
+    "type": "library",
+    "description": "Tests for classes",
+    "authors": [
+        {
+            "name": "Gabriel Jacinto",
+            "email": "gamjj74@hotmail.com",
+            "homepage": "http://gabrieljmj.github.io"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Gabrieljmj\\Should\\": "src/Gabrieljmj/Should/",
@@ -7,7 +16,9 @@
             "s\\": "s/"
         }
     },
+    "license": "MIT",
     "require": {
+        "php": ">=5.6.*",
         "symfony/console": "3.0.*@dev",
         "psr/log": "~1.0",
         "monolog/monolog": "1.12.*@dev",
