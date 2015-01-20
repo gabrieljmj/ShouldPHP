@@ -20,9 +20,9 @@ use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Gabrieljmj\Should\AmbientInterface;
+use Gabrieljmj\Should\Ambient\AmbientInterface;
 use Gabrieljmj\Should\Template\TemplateInterface;
-use Gabrieljmj\Should\Collection;
+use Gabrieljmj\Should\Report\Report;
 use \Exception;
 
 class ExecuteTestsCommand extends Command
@@ -86,7 +86,6 @@ class ExecuteTestsCommand extends Command
         $this->input = $input;
         $this->output = $output;
         $file = $this->input->getArgument('file');
-        echo str_replace('/', '\\', $file);
         $this->input->hasArgument('test_name') ? $testName = $this->input->getArgument('test_name') : null;
 
         if ($this->isDir($file)) {
@@ -115,8 +114,7 @@ class ExecuteTestsCommand extends Command
             }
         }
 
-        $report = $this->report instanceof Collection ? $this->report : new Collection($this->report);
-        $output->writeln($this->template->render($report));
+        $output->writeln($this->template->render($this->report));
     }
 
     /**
@@ -162,20 +160,28 @@ class ExecuteTestsCommand extends Command
             $this->logger->info($report->serialize());
         }
 
-        $name = $report['test'];
+        $name = $report->getName();
 
         if ($this->report === null) {
-            $this->report = $report;
+            $this->report = new Report('all_tested');
         }
 
-        foreach ($report as $testType => $value) {
-            if (isset($report[$testType]['fail'])) {
-                foreach ($report[$testType]['fail'] as $element => $fails) {
-                    $this->report[$testType]['fail'][$element] = $fails;
-                }
+        $assertList = $report->getAssertList();
 
-                foreach ($report[$testType]['success'] as $element => $successes) {
-                    $this->report[$testType]['success'][$element] = $successes;
+        foreach ($assertList as $testType => $value) {
+            if (isset($assertList[$testType]['fail'])) {
+                foreach ($assertList[$testType]['fail'] as $element => $fails) {
+                    foreach ($fails as $fail) {
+                        $this->report->addAssert($fail);
+                    }
+                }
+            }
+
+            if (isset($assertList[$testType]['success'])) {
+                foreach ($assertList[$testType]['success'] as $element => $successes) {
+                    foreach ($successes as $success) {
+                        $this->report->addAssert($success);
+                    }
                 }
             }
         }
@@ -191,25 +197,16 @@ class ExecuteTestsCommand extends Command
 
         foreach ($ambientFiles as $ambientFile) {
             if ($this->isDir($ambientFile)) {
-                $report = $this->executeArrayOfTests($this->getAmbientFilesFromDir($ambientFile));
-                $this->report['total']['total'] += $report['total']['total'];
-                $this->report['total']['all']['success'] += $report['total']['all']['success'];
-                $this->report['total']['all']['success'] += $report['total']['all']['fail'];
+                $this->executeArrayOfTests($this->getAmbientFilesFromDir($ambientFile));
             } elseif (class_exists($ambientFile)) {
-                $report = $this->executeAmbientObject($ambientFile);
-                $this->report['total']['total'] += $report['total']['total'];
-                $this->report['total']['all']['success'] += $report['total']['all']['success'];
-                $this->report['total']['all']['success'] += $report['total']['all']['fail'];
+                $this->executeAmbientObject($ambientFile);
             } else {
                 $ambients[] = $this->validateFile($ambientFile);
             }
         }
 
         foreach ($ambients as $ambient) {
-            $report = $this->runTest($ambient);
-            $this->report['total']['total'] += $report['total']['total'];
-            $this->report['total']['all']['success'] += $report['total']['all']['success'];
-            $this->report['total']['all']['success'] += $report['total']['all']['fail'];
+            $this->runTest($ambient);
         }
     }
 

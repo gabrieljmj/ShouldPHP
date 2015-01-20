@@ -44,7 +44,7 @@ Ambient object (tests suffix: ```test```):
 ```php
 namespace Namespace;
 
-use Gabrieljmj\Should\Ambient;
+use Gabrieljmj\Should\Ambient\Ambient;
 
 class YourAmbient extends Ambient
 {

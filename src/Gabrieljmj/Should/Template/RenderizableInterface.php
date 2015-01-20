@@ -10,9 +10,9 @@
  
 namespace Gabrieljmj\Should\Template;
 
-use Gabrieljmj\Should\Collection;
+use Gabrieljmj\Should\Report\Report;
 
 interface RenderizableInterface
 {
-    public function render(Collection $report);
+    public function render(Report $report);
 }

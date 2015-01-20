@@ -8,19 +8,26 @@
  * @license MIT
  */
  
-namespace Gabrieljmj\Should;
+namespace Gabrieljmj\Should\Ambient;
 
 interface AmbientInterface
 {
     /**
+     * Returns the ambient name
+     *
      * @return string
      */
     public function getName();
     
+    /**
+     * Runs the tests and create the report
+     */
     public function run();
     
     /**
-     * @param \Gabrieljmj\Should\Report
+     * Returns the ambient tests report
+     *
+     * @param \Gabrieljmj\Should\Report\Report
      */
     public function getReport();
 }

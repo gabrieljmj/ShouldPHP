@@ -11,12 +11,12 @@
 namespace Gabrieljmj\Should\Template;
 
 use Gabrieljmj\Should\Template\TemplateInterface;
-use Gabrieljmj\Should\Collection;
+use Gabrieljmj\Should\Report\Report;
 
 class StandardTemplate implements TemplateInterface
 {
-    public function render(Collection $report)
-    {var_dump($report);
+    public function render(Report $report)
+    {
         $return = " 
  ____  _   _ _____ _   _ _    _____
 /  _ \| | | |  _  | | | | |  |  _  \ 
@@ -33,9 +33,9 @@ class StandardTemplate implements TemplateInterface
             $return .= implode("\n\n", $this->getFail($report));
         }
 
-        $total = $report['total']['total'];
-        $success = $report['total']['all']['success'];
-        $fail = $report['total']['all']['fail'];
+        $total = $report->getTotal();
+        $success = $report->getSuccessTotal();
+        $fail = $report->getFailTotal();
         $time = round((microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"]) * 100) / 100;
 
         $return .= "\n\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}\nExecution time: {$time}";
@@ -43,18 +43,19 @@ class StandardTemplate implements TemplateInterface
         return $return;
     }
 
-    private function getFail(Collection $report)
+    private function getFail(Report $report)
     {
         $return = [];
+        $assertList = $report->getAssertList();
 
-        foreach ($report as $testType => $value) {
-            if (isset($report[$testType]['fail'])) {
-                foreach ($report[$testType]['fail'] as $element => $fails) {
+        foreach ($assertList as $testType => $value) {
+            if (isset($assertList[$testType]['fail'])) {
+                foreach ($assertList[$testType]['fail'] as $element => $fails) {
                     $return[] = "Fail on tests of the {$testType} {$element}:\n";
                     foreach ($fails as $key => $fail) {
                         $n = $key + 1;
-                        $name = $fail['name'];
-                        $failmsg = $fail['failmsg'];
+                        $name = $fail->getName();
+                        $failmsg = $fail->getFailMessage();
                         $return[] = "{$n}) {$name} - {$failmsg}";
                     }
                 }

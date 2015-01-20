@@ -8,8 +8,9 @@
  * @license MIT
  */
  
-namespace Gabrieljmj\Should;
+namespace Gabrieljmj\Should\Ambient;
 
+use Gabrieljmj\Should\Ambient\AmbientInterface;
 use Gabrieljmj\Should\ShouldClass;
 use Gabrieljmj\Should\ShouldMethod;
 use Gabrieljmj\Should\ShouldProperty;
@@ -18,8 +19,8 @@ use Gabrieljmj\Should\TheClass;
 use Gabrieljmj\Should\TheMethod;
 use Gabrieljmj\Should\TheProperty;
 use Gabrieljmj\Should\TheParameter;
-use Gabrieljmj\Should\Collection;
-use Gabrieljmj\Should\Runner\RunnerInterface;
+use Gabrieljmj\Should\Report\Report;
+use Gabrieljmj\Should\Report\AssertReport;
 
 class Ambient implements AmbientInterface
 {
@@ -46,10 +47,10 @@ class Ambient implements AmbientInterface
     /**
      * @var string
      */
-    private $name;
+    protected $name;
     
     /**
-     * @var \Gabrieljmj\Should\Collection
+     * @var \Gabrieljmj\Should\Report\Report
      */
     private $report;
     
@@ -64,7 +65,7 @@ class Ambient implements AmbientInterface
     /**
      * @param string|object $class
      * @param array         $args
-     * @return \Gabrieljmj\Should\Class
+     * @return \Gabrieljmj\Should\TheClass
      */
     public function theClass($class, array $args = [])
     {
@@ -81,7 +82,7 @@ class Ambient implements AmbientInterface
     /**
      * @param string|object $class
      * @param string        $method
-     * @return \Gabrieljmj\Should\Method
+     * @return \Gabrieljmj\Should\TheMethod
      */
     public function theMethod($class, $method)
     {
@@ -94,6 +95,7 @@ class Ambient implements AmbientInterface
     /**
      * @param string|object  $class
      * @param string         $property
+     * @return \Gabrieljmj\Should\TheProperty
      */
     public function theProperty($class, $property)
     {
@@ -103,6 +105,12 @@ class Ambient implements AmbientInterface
         return $this->create('property', func_get_args(), $index);
     }
 
+    /**
+     * @param string|object $class
+     * @param string        $method
+     * @param string        $parameter
+     * @return \Gabrieljmj\Should\TheParameter
+     */
     public function theParameter($class, $method, $parameter)
     {
         $className = $this->getClassAsString($class);
@@ -112,8 +120,8 @@ class Ambient implements AmbientInterface
     }
     
     /**
-     * @{inheritDoc}
-    */
+     * Runs the tests and create the report
+     */
     public function run()
     {
         $classAssertList = $this->createAssertList($this->classCollection);
@@ -121,11 +129,13 @@ class Ambient implements AmbientInterface
         $propertyAssertList = $this->createAssertList($this->propertyCollection);
         $parameterAssertList = $this->createAssertList($this->parameterCollection);
         
-        $this->report = $this->createReport($classAssertList, $methodAssertList, $propertyAssertList, $parameterAssertList);
+        $this->createReport($classAssertList, $methodAssertList, $propertyAssertList, $parameterAssertList);
     }
     
     /**
-     * @return \Gabrieljmj\Should\Collection
+     * Returns the ambient tests report
+     *
+     * @param \Gabrieljmj\Should\Report\Report
      */
     public function getReport()
     {
@@ -133,6 +143,8 @@ class Ambient implements AmbientInterface
     }
     
     /**
+     * Returns the ambient name
+     *
      * @return string
      */
     public function getName()
@@ -147,44 +159,25 @@ class Ambient implements AmbientInterface
      */
     private function createReport(array $classAssertList, array $methodAssertList, array $propertyAssertList, array $parameterAssertList)
     {
-        $report = [];
-        $report['test'] = $this->getName();
-        $report['total'] = [
-            'total' => 0,
-            'all' => ['success' => 0, 'fail' => 0],
-            'class' => ['success' => 0, 'fail' => 0],
-            'method' => ['success' => 0, 'fail' => 0],
-            'property' => ['success' => 0, 'fail' => 0],
-            'parameter' => ['success' => 0, 'fail' => 0]
-        ];
+        if (!$this->report instanceof Report) {
+            $this->report = new Report($this->getName());
+        }
 
-        $report = $this->createReportOfSomeType('class', $classAssertList, $report);
-        $report = $this->createReportOfSomeType('method', $methodAssertList, $report);
-        $report = $this->createReportOfSomeType('property', $propertyAssertList, $report);
-        $report = $this->createReportOfSomeType('parameter', $parameterAssertList, $report);
-
-        return new Collection($report);
+        $this->createReportOfSomeType('class', $classAssertList);
+        $this->createReportOfSomeType('method', $methodAssertList);
+        $this->createReportOfSomeType('property', $propertyAssertList);
+        $this->createReportOfSomeType('parameter', $parameterAssertList);
     }
 
     /**
      * @param string $type
      * @param array  $assertList
-     * @param array  $report
-     * @return array
      */
-    private function createReportOfSomeType($type, array $assertList, array $report) {
+    private function createReportOfSomeType($type, array $assertList) {
         foreach ($assertList as $assert) {
-            $nameEx = explode('\\', get_class($assert));
-            $name = end($nameEx);
-            $status = $assert->execute() ? 'success' : 'fail';
-            $report[$type][$status][$assert->getTestedElement()][] = ['description' => $assert->getDescription(), 'name' => $name, 'failmsg' => $assert->getFailMessage()];
-            $report['total']++;
-            $report['total'][$type][$status]++;
-            $report['total']['total']++;
-            $report['total']['all'][$status]++;
+            $assertReport = new AssertReport($type, $assert);
+            $this->report->addAssert($assertReport);
         }
-
-        return $report;
     }
 
     /**
