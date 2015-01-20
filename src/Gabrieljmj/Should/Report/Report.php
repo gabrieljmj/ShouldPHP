@@ -151,6 +151,6 @@ class Report
      */
     public function unserialize($str)
     {
-        return;
+        return ;
     }
 }
