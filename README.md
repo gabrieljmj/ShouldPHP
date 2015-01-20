@@ -1,10 +1,12 @@
 ShouldPHP
 =========
-
-In-development.
+**ShouldPHP** is (or will be) a library for you, developer, to test your classes and objects and their method and properties with a simple syntax based on "should". The idea came to my mind after seeing the framework [Should.JS](https://github.com/shouldjs/should.js) for [Node.JS](nodejs.org).
 
 * A poor documentation below
 * Maybe has bugs
+
+###Status:
+In-development (current branch: *dev*).
 
 ###Quick examples of use
 
