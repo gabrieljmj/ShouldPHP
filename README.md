@@ -19,7 +19,7 @@ use Gabrieljmj\Should\Ambient;
 
 $a = new Ambient('test');
 $a->theClass('Employee')->should->be->instance('Person');
-$a->theProperty('Employee', 'role')->should->be->equals('Conserje');
+$a->theProperty('Employee', 'role')->should->be->equal('Conserje');
 
 return $a;
 ```
@@ -27,6 +27,7 @@ Console:
 ```
 php bin/should execute test.php
 ```
+<div style="text-align: center;"><img src="http://i.imgur.com/1n9zBaP.png"/></div>
 
 Several:
 ```json
@@ -55,7 +56,7 @@ class YourAmbient extends Ambient
 {
     public function testInstance()
     {
-        $this->theClass(new \stdClass)->should->be->equals(new \stdClass);
+        $this->theClass(new \stdClass)->should->be->equal(new \stdClass);
     }
 }
 ```
