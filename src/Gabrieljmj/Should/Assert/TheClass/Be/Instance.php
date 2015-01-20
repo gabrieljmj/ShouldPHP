@@ -27,22 +27,43 @@ class Instance extends AbstractAssert
         $this->arg1 = $arg1;
         $this->arg2 = $arg2;
     }
-
+    
+    /**
+     * Returns the tested element
+     *
+     * @return string
+     */
     public function getTestedElement()
     {
         return $this->arg1;
     }
 
+    /**
+     * Returns the assert description
+     *
+     * @return string
+     */
     public function getDescription()
     {
         return 'Tests if the object is of this class or has this class as one of its parents';
     }
 
+    /**
+     * Executes the assert
+     *
+     * @return boolean
+     */
     public function execute()
     {
         return is_a($this->arg1, $this->arg2);
     }
 
+    /**
+     * Returns teh fail description
+     * Null case in case of success
+     *
+     * @return string|null
+     */
     public function getFailMessage()
     {
         

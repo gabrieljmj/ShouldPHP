@@ -30,16 +30,23 @@ class TheProperty extends AbstractAssert
      */
     public function __construct($class, $property)
     {
-        $this->class = is_object($class) ? get_class($class) : $class;
+        $this->class = $class;
         $this->property = $property;
     }
-
+    
+    /**
+     * Returns the tested element
+     *
+     * @return string
+     */
     public function getTestedElement()
     {
         return $this->class;;
     }
 
     /**
+     * Returns the assert description
+     *
      * @return string
      */
     public function getDescription()
@@ -47,12 +54,20 @@ class TheProperty extends AbstractAssert
         return 'Tests if a class has certain property';
     }
 
+    /**
+     * Returns teh fail description
+     * Null case in case of success
+     *
+     * @return string|null
+     */
     public function getFailMessage()
     {
         return $this->execute() ? null : 'The class ' . $this->class . ' has not the property ' . $this->property;
     }
 
     /**
+     * Executes the assert
+     *
      * @return boolean
      */
     public function execute()

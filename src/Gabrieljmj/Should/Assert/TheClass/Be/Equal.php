@@ -39,12 +39,19 @@ class Equal extends AbstractAssert
         $this->arg2 = $arg2;
     }
 
+    /**
+     * Returns the tested element
+     *
+     * @return string
+     */
     public function getTestedElement()
     {
         return get_class($this->arg1);
     }
 
     /**
+     * Returns the assert description
+     *
      * @return string
      */
     public function getDescription()
@@ -52,12 +59,20 @@ class Equal extends AbstractAssert
         return 'Tests if an instance of some class is equal other';
     }
 
+    /**
+     * Returns teh fail description
+     * Null case in case of success
+     *
+     * @return string|null
+     */
     public function getFailMessage()
     {
         return $this->execute() ? null : 'The instance of ' . get_class($this->arg1) . ' is not equal to the another instance of ' . get_class($this->arg2);
     }
 
     /**
+     * Executes the assert
+     *
      * @return boolean
      */
     public function execute()

@@ -27,6 +27,11 @@ class Equal extends AbstractAssert
         $this->value = $value;
     }
 
+    /**
+     * Executes the assert
+     *
+     * @return boolean
+     */
     public function execute()
     {
         $ref = new \ReflectionClass($this->class);
@@ -43,18 +48,34 @@ class Equal extends AbstractAssert
 
         return false;
     }
-
+    
+    /**
+     * Returns the tested element
+     *
+     * @return string
+     */
     public function getTestedElement()
     {
         $class = is_object($this->class) ? get_class($this->class) : $this->class;
         return $class . '::$' . $this->property;
     }
 
+    /**
+     * Returns the assert description
+     *
+     * @return string
+     */
     public function getDescription()
     {
         return 'Tests if a class has a property with a certain value. If the property is not public, the default value will be used.';
     }
 
+    /**
+     * Returns teh fail description
+     * Null case in case of success
+     *
+     * @return string|null
+     */
     public function getFailMessage()
     {
         $class = is_object($this->class) ? get_class($this->class) : $this->class;

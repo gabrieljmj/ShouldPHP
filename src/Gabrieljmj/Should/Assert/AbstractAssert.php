@@ -15,15 +15,28 @@ use Gabrieljmj\Should\Exception\AssertException;
 
 abstract class AbstractAssert implements AssertInterface
 {
+    /**
+     * Custom message in case of fail
+     *
+     * @var string
+     */
     protected $message;
-
-    protected $failMsg;
     
+    /**
+     * Sets the custom message
+     *
+     * @param string $message
+     */
     public function setMessage($message)
     {
         $this->message = $message;
     }
     
+    /**
+     * Returns a custom message in case of fail
+     *
+     * @return string
+     */
     public function getMessage()
     {
         return $this->message;

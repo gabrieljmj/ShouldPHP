@@ -47,6 +47,11 @@ class AsDefaultValue extends AbstractAssert
         $this->value = $value;
     }
 
+    /**
+     * Executes the assert
+     *
+     * @return boolean
+     */
     public function execute()
     {
         $ref = new \ReflectionClass($this->class);
@@ -61,18 +66,34 @@ class AsDefaultValue extends AbstractAssert
 
         return false;
     }
-
+    
+    /**
+     * Returns the tested element
+     *
+     * @return string
+     */
     public function getTestedElement()
     {
 
     }
 
+    /**
+     * Returns teh fail description
+     * Null case in case of success
+     *
+     * @return string|null
+     */
     public function getFailMessage()
     {
         $class = is_object($this->class) ? get_class($this->class) : $this->class;
         return $this->execute() ? null : 'The default value of the parameter ' . $this->parameter . ' of the ' . $class . '::' . $this->method . ' is not equal to ' . print_r($this->value);
     }
 
+    /**
+     * Returns the assert description
+     *
+     * @return string
+     */
     public function getDescription()
     {
         return 'Tests if certain parameter of a method has the default value equals determined one';
