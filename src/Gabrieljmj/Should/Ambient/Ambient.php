@@ -21,6 +21,7 @@ use Gabrieljmj\Should\TheProperty;
 use Gabrieljmj\Should\TheParameter;
 use Gabrieljmj\Should\Report\Report;
 use Gabrieljmj\Should\Report\AssertReport;
+use Gabrieljmj\Should\Report\AssertType;
 
 class Ambient implements AmbientInterface
 {
@@ -163,10 +164,10 @@ class Ambient implements AmbientInterface
             $this->report = new Report($this->getName());
         }
 
-        $this->createReportOfSomeType('class', $classAssertList);
-        $this->createReportOfSomeType('method', $methodAssertList);
-        $this->createReportOfSomeType('property', $propertyAssertList);
-        $this->createReportOfSomeType('parameter', $parameterAssertList);
+        $this->createReportOfSomeType(AssertType::CLASS_T, $classAssertList);
+        $this->createReportOfSomeType(AssertType::METHOD_T, $methodAssertList);
+        $this->createReportOfSomeType(AssertType::PROPERTY_T, $propertyAssertList);
+        $this->createReportOfSomeType(AssertType::PARAMETER_T, $parameterAssertList);
     }
 
     /**

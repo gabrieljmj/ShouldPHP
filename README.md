@@ -2,8 +2,9 @@ ShouldPHP
 =========
 
 In-development.
-*A poor documentation below
-*Maybe has bugs
+
+* A poor documentation below
+* Maybe has bugs
 
 ###Quick examples of use
 
