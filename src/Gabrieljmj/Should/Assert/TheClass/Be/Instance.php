@@ -10,32 +10,20 @@
  
 namespace Gabrieljmj\Should\Assert\TheClass\Be;
 
-use Gabrieljmj\Should\Assert\AbstractAssert;
+use Gabrieljmj\Should\Assert\TheClass\AbstractClassAssert;
 
-class Instance extends AbstractAssert
+class Instance extends AbstractClassAssert
 {
-    private $arg1;
+    private $arg2;
     
-    protected $arg2;
-    
-    public function __construct($arg1, $arg2)
+    public function __construct($class, $arg2)
     {
-        if (!is_object($arg1)) {
+        if (!is_object($class)) {
             throw new InvalidArgumentException('Both arguments must be object');
         }
         
-        $this->arg1 = $arg1;
+        parent::__construct($class);
         $this->arg2 = $arg2;
-    }
-    
-    /**
-     * Returns the tested element
-     *
-     * @return string
-     */
-    public function getTestedElement()
-    {
-        return $this->arg1;
     }
 
     /**
@@ -45,7 +33,7 @@ class Instance extends AbstractAssert
      */
     public function getDescription()
     {
-        return 'Tests if the object is of this class or has this class as one of its parents';
+        return 'Tests if the object is of the a class or has this class as one of its parents';
     }
 
     /**
@@ -55,7 +43,7 @@ class Instance extends AbstractAssert
      */
     public function execute()
     {
-        return is_a($this->arg1, $this->arg2);
+        return is_a($this->class, $this->arg2);
     }
 
     /**

@@ -21,4 +21,11 @@ class Have extends AbstractParameterCondition
         $instance->setMessage($message);
         $this->addAssert($instance);
     }
+
+    public function acceptOnly($type, $message = null)
+    {
+        $instance = new AcceptOnly($this->class, $this->method, $this->parameter, $type);
+        $instance->setMessage($message);
+        $this->addAssert($instance);
+    }
 }

@@ -10,16 +10,10 @@
  
 namespace Gabrieljmj\Should\Assert\TheClass\Be;
 
-use Gabrieljmj\Should\Assert\AbstractAssert;
-use \InvalidArgumentException;
+use Gabrieljmj\Should\Assert\TheClass\AbstractClassAssert;
 
-class Equal extends AbstractAssert
+class Equal extends AbstractClassAssert
 {
-    /**
-     * @var object
-     */
-    private $arg1;
-    
     /**
      * @var object
      */
@@ -29,24 +23,14 @@ class Equal extends AbstractAssert
      * @param object $arg1
      * @param object $arg2
      */
-    public function __construct($arg1, $arg2)
+    public function __construct($class, $arg2)
     {
-        if (!is_object($arg1) || !is_object($arg2)) {
-            throw new InvalidArgumentException('Both arguments must be object');
+        if (!is_object($class) || !is_object($arg2)) {
+            throw new \InvalidArgumentException('Both arguments must be object');
         }
         
-        $this->arg1 = $arg1;
+        parent::__construct($class);
         $this->arg2 = $arg2;
-    }
-
-    /**
-     * Returns the tested element
-     *
-     * @return string
-     */
-    public function getTestedElement()
-    {
-        return get_class($this->arg1);
     }
 
     /**
@@ -67,7 +51,7 @@ class Equal extends AbstractAssert
      */
     public function getFailMessage()
     {
-        return $this->execute() ? null : 'The instance of ' . get_class($this->arg1) . ' is not equal to the another instance of ' . get_class($this->arg2);
+        return $this->execute() ? null : 'The instance of ' . get_class($this->class) . ' is not equal to the another instance of ' . get_class($this->arg2);
     }
 
     /**
@@ -77,6 +61,6 @@ class Equal extends AbstractAssert
      */
     public function execute()
     {
-        return $this->arg1 == $this->arg2;
+        return $this->class == $this->arg2;
     }
 }

@@ -11,18 +11,19 @@
 namespace Gabrieljmj\Should\Assert\TheParameter\Have;
 
 use Gabrieljmj\Should\Assert\TheParameter\AbstractParameterAssert;
+use Gabrieljmj\Should\Options\TypeHinting;
 
 class AsDefaultValue extends AbstractParameterAssert
 {
     /**
-     * @var mixed
+     * @var string|array
      */
-    private $value;
+    private $type;
     
-    public function __construct($class, $method, $parameter, $value)
+    public function __construct($class, $method, $parameter, $type)
     {
         parent::__construct($class, $method, $parameter);
-        $this->value = $value;
+        $this->type = $type;
     }
 
     /**
@@ -38,8 +39,17 @@ class AsDefaultValue extends AbstractParameterAssert
 
         foreach ($params as $param) {
             if ($param->getName() === $this->parameter) {
-                if ($param->isDefaultValueAvailable()) {
-                    return $this->value === $param->getDefaultValue();
+                switch ($this->type) {
+                    case TypeHinting::ARR:
+                        return $param->isArray();
+                    case TypeHinting::CALL:
+                        return $param->isCallable();
+                    case TypeHinting::INSTANCE_OF:
+                        $class = $param->getClass();
+                        $className = $class ==== null ? null : $class->getName();
+                        return TypeHinting::$class === $className;
+                    default:
+                        throw new \Exception('The type of parameter specified is not valid: ' . $this->type);
                 }
             }
         }

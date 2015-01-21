@@ -10,26 +10,11 @@
  
 namespace Gabrieljmj\Should\Assert\TheMethod\Be;
 
-use Gabrieljmj\Should\Assert\AbstractAssert;
+use Gabrieljmj\Should\Assert\TheMethod\AbstractMethodAssert;
 use Gabrieljmj\Should\Options\Visibility;
-use ReflectionMethod;
 
-class VisibleAs extends AbstractAssert
+class VisibleAs extends AbstractMethodAssert
 {
-    /**
-     * The class
-     *
-     * @var string|object
-     */
-    private $class;
-
-    /**
-     * The method
-     *
-     * @var string
-     */
-    private $method;
-
     /**
      * Visibility (public, private, protected)
      * Use the constants of \Gabrieljmj\Should\Options\Visibility
@@ -45,19 +30,8 @@ class VisibleAs extends AbstractAssert
      */
     public function __construct($class, $method, $visibility)
     {
-        $this->class = $class;
-        $this->method = $method;
+        parent::__construct($class, $method);
         $this->visibility = $visibility;
-    }
-
-    /**
-     * Returns the tested element
-     *
-     * @return string
-     */
-    public function getTestedElement()
-    {
-        return $this->class . '::' . $this->method;
     }
 
     /**

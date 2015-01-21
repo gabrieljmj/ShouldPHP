@@ -10,34 +10,18 @@
  
 namespace Gabrieljmj\Should\Assert\TheMethod\Have;
 
-use Gabrieljmj\Should\Assert\AbstractAssert;
-use ReflectionMethod;
+use Gabrieljmj\Should\Assert\TheMethod\AbstractMethodAssert;
 
-class ArgumentsEqual extends AbstractAssert
+class ArgumentsEqual extends AbstractMethodAssert
 {
-    private $class;
-
-    private $method;
-
     private $expectedArgs;
 
     private $returned;
 
     public function __construct($class, $method, array $expectedArgs)
     {
-        $this->class = $class;
-        $this->method = $method;
+        parent::__construct($class, $method);
         $this->expectedArgs = $expectedArgs;
-    }
-
-    /**
-     * Returns the tested element
-     *
-     * @return string
-     */
-    public function getTestedElement()
-    {
-        return $this->class . '::' . $this->method;
     }
 
     /**

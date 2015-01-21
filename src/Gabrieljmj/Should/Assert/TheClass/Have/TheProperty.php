@@ -10,19 +10,14 @@
  
 namespace Gabrieljmj\Should\Assert\TheClass\Have;
 
-use Gabrieljmj\Should\Assert\AbstractAssert;
+use Gabrieljmj\Should\Assert\TheClass\AbstractClassAssert;
 
-class TheProperty extends AbstractAssert
+class TheProperty extends AbstractClassAssert
 {
     /**
      * @var string
      */
-    protected $class;
-    
-    /**
-     * @var string
-     */
-    protected $property;
+    private $property;
     
     /**
      * @param string|object $class
@@ -30,18 +25,8 @@ class TheProperty extends AbstractAssert
      */
     public function __construct($class, $property)
     {
-        $this->class = $class;
+        parent::__construct($class);
         $this->property = $property;
-    }
-    
-    /**
-     * Returns the tested element
-     *
-     * @return string
-     */
-    public function getTestedElement()
-    {
-        return $this->class;;
     }
 
     /**
@@ -62,7 +47,8 @@ class TheProperty extends AbstractAssert
      */
     public function getFailMessage()
     {
-        return $this->execute() ? null : 'The class ' . $this->class . ' has not the property ' . $this->property;
+        $class = is_object($this->class) ? get_class($this->class) : $this->class;
+        return $this->execute() ? null : 'The class ' . $class . ' has not the property ' . $this->property;
     }
 
     /**
