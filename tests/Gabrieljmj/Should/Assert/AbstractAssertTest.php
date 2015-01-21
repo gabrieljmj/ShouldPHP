@@ -10,10 +10,14 @@
  
 namespace Test\Gabrieljmj\Should\Assert;
 
+use Gabrieljmj\Should\Assert\AssertInterface;
+
 abstract class AbstractAssertTest extends \PHPUnit_Framework_TestCase
 {
     protected function assertPreConditions()
     {
+        $this->assertTrue($this->getSuccessInstance() instanceof AssertInterface);
+        $this->assertTrue($this->getFailureInstance() instanceof AssertInterface);
         $this->assertTrue($this->getSuccessInstance()->execute());
         $this->assertFalse($this->getFailureInstance()->execute());
     }

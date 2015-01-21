@@ -8,11 +8,16 @@
  * @license MIT
  */
  
-namespace Test\Gabrieljmj\Should\Assert\TheClass\Have;
+namespace Test\Gabrieljmj\Should\Assert;
 
 class Foo
 {
     public $public;
     protected $protected;
     private $private;
+
+    public function getBar()
+    {
+        return 'bar';
+    }
 }

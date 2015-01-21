@@ -30,24 +30,31 @@ class ThePropertyTest extends AbstractAssertTest
         $this->executingTestThatHaveToPass('protected');
     }
 
+    public function testGettingTestedElement()
+    {
+        $i = $this->getSuccessInstance();
+
+        $this->assertEquals('\Test\Gabrieljmj\Should\Assert\Foo', $i->getTestedElement());
+    }
+
     protected function getSuccessInstance()
     {
-        return new TheProperty('\Test\Gabrieljmj\Should\Assert\TheClass\Have\Foo', 'public');
+        return new TheProperty('\Test\Gabrieljmj\Should\Assert\Foo', 'public');
     }
 
     protected function getFailureInstance()
     {
-        return new TheProperty('\Test\Gabrieljmj\Should\Assert\TheClass\Have\Foo', 'invalid_property');
+        return new TheProperty('\Test\Gabrieljmj\Should\Assert\Foo', 'invalid_property');
     }
 
     protected function getFailureMessage()
     {
-        return 'The class \Test\Gabrieljmj\Should\Assert\TheClass\Have\Foo has not the property invalid_property';
+        return 'The class \Test\Gabrieljmj\Should\Assert\Foo has not the property invalid_property';
     }
 
     protected function executingTestThatHaveToPass($property)
     {
-        $instance = new TheProperty('\Test\Gabrieljmj\Should\Assert\TheClass\Have\Foo', $property);
+        $instance = new TheProperty('\Test\Gabrieljmj\Should\Assert\Foo', $property);
 
         $this->assertTrue($instance->execute());
     }

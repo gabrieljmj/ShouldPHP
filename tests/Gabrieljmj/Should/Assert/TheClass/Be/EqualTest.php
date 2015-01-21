@@ -22,6 +22,13 @@ class EqualTest extends AbstractAssertTest
         $this->assertFalse($assert->execute());
     }
 
+    public function testGettingThetTestedElement()
+    {
+        $assert = new Equal(new \stdClass, new \stdClass);
+
+        $this->assertEquals('stdClass', $assert->getTestedElement($assert));
+    }
+
     public function testExecutingWithEqualsReturnsTrueBoolean()
     {
         $assert = $this->getSuccessInstance();

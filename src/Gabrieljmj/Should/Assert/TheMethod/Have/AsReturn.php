@@ -12,16 +12,19 @@ namespace Gabrieljmj\Should\Assert\TheMethod\Have;
 
 use Gabrieljmj\Should\Assert\TheMethod\AbstractMethodAssert;
 
-class ArgumentsEqual extends AbstractMethodAssert
+class AsReturn extends AbstractMethodAssert
 {
-    private $expectedArgs;
+    private $expectedReturn;
+
+    private $args;
 
     private $returned;
 
-    public function __construct($class, $method, array $expectedArgs)
+    public function __construct($class, $method, $expectedReturn, array $args)
     {
         parent::__construct($class, $method);
         $this->expectedArgs = $expectedArgs;
+        $this->args = $args;
     }
 
     /**
@@ -31,17 +34,9 @@ class ArgumentsEqual extends AbstractMethodAssert
      */
     public function execute()
     {
-        $ref = new \ReflectionMethod($this->class, $this->method);
-        $params = $ref->getParameters();
+        $this->returned = call_user_func_array([$this->class, $this->method], $this->args);
 
-        $params = array_map(function ($param)
-        {
-            return $param->getName();
-        }, $params);
-
-        $this->return = $params;
-
-        return $this->expectedArgs === $params;
+        return $this->returned == $this->expectedReturn;
     }
 
     /**
@@ -51,7 +46,7 @@ class ArgumentsEqual extends AbstractMethodAssert
      */
     public function getDescription()
     {
-        return 'Tests if the arguments of the method are equal expected.';
+        return 'Tests if the return of a method is equal expected.';
     }
 
     /**
@@ -62,6 +57,6 @@ class ArgumentsEqual extends AbstractMethodAssert
      */
     public function getFailMessage()
     {
-        return $this->execute() ? null : 'The arguments of the method ' . $class . '::' . $this->method . ' are incorrect. Expcted: ' . print_r($this->excpectedArgs, true) . ' - Returned: ' . print_r($this->returned, true);
+        return $this->execute() ? null : 'The return of the method ' . $this->getTestedElement() . ' ' . count($this->args) > 0 ? 'with the arguments ' . print_r($this->args, true) : null . ' is not equal the expected: ' . print_r($this->expectedReturn, true)
     }
 }
