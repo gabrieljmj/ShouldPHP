@@ -28,6 +28,7 @@ Console:
 php bin/should execute test.php
 ```
 <div style="text-align: center;"><img src="http://i.imgur.com/1n9zBaP.png"/></div>
+*Yes, I use Windows. Judge me.*
 
 Several:
 ```json
