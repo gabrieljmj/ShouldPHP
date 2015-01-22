@@ -44,6 +44,8 @@ class AcceptOnly extends AbstractParameterAssert
                         return $param->isArray();
                     case TypeHinting::CALL:
                         return $param->isCallable();
+                    case TypeHinting::ANYTHING:
+                        return $param->isVariadic();
                     case TypeHinting::INSTANCE_OF:
                         $class = $param->getClass();
                         $className = $class ==== null ? null : $class->getName();
