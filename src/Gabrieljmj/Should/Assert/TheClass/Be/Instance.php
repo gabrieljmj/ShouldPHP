@@ -49,8 +49,6 @@ class Instance extends AbstractClassAssert
         } else {
             return $this->classToString($this->class) === $this->classToString($this->arg2);
         }
-
-        return false;
     }
 
     /**
@@ -63,7 +61,7 @@ class Instance extends AbstractClassAssert
     {
         $class = $this->classToString($this->class);
         $arg2 = $this->classToString($this->arg2);
-        return $this->execute() ? null : $this->class . ' is not instance of ' . $arg2;
+        return $this->execute() ? null : $class . ' is not instance of ' . $arg2;
     }
 
     private function classToString($class)
