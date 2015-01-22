@@ -48,17 +48,6 @@ class Equal extends AbstractAssert
 
         return false;
     }
-    
-    /**
-     * Returns the tested element
-     *
-     * @return string
-     */
-    public function getTestedElement()
-    {
-        $class = is_object($this->class) ? get_class($this->class) : $this->class;
-        return $class . '::$' . $this->property;
-    }
 
     /**
      * Returns the assert description
