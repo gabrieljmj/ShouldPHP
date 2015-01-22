@@ -22,7 +22,6 @@ class ShouldMethod implements ShouldInterface
 
     public function __construct($class, $method)
     {
-        $class = is_object($class) ? get_class($class) : $class;
         $this->have = new Have($class, $method);
         $this->be = new Be($class, $method);
     }

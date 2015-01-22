@@ -23,7 +23,7 @@ class AsReturn extends AbstractMethodAssert
     public function __construct($class, $method, $expectedReturn, array $args)
     {
         parent::__construct($class, $method);
-        $this->expectedArgs = $expectedArgs;
+        $this->expectedReturn = $expectedReturn;
         $this->args = $args;
     }
 
@@ -34,7 +34,12 @@ class AsReturn extends AbstractMethodAssert
      */
     public function execute()
     {
-        $this->returned = call_user_func_array([$this->class, $this->method], $this->args);
+        if (is_object($this->class)) {
+            $ref = new \ReflectionMethod($this->class, $this->method);
+            $this->returned = $ref->invokeArgs($this->class, $this->args);
+        } else {
+            $this->returned = call_user_func_array([$this->class, $this->method], $this->args);
+        }
 
         return $this->returned == $this->expectedReturn;
     }
@@ -57,6 +62,6 @@ class AsReturn extends AbstractMethodAssert
      */
     public function getFailMessage()
     {
-        return $this->execute() ? null : 'The return of the method ' . $this->getTestedElement() . ' ' . count($this->args) > 0 ? 'with the arguments ' . print_r($this->args, true) : null . ' is not equal the expected: ' . print_r($this->expectedReturn, true)
+        return;
     }
 }

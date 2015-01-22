@@ -19,7 +19,7 @@ class TypeHinting
 
     public static $class;
 
-    public static function aInstanceOf($class)
+    public static function anInstanceOf($class)
     {
         self::$class = $class;
 

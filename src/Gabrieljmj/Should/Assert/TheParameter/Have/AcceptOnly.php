@@ -13,7 +13,7 @@ namespace Gabrieljmj\Should\Assert\TheParameter\Have;
 use Gabrieljmj\Should\Assert\TheParameter\AbstractParameterAssert;
 use Gabrieljmj\Should\Options\TypeHinting;
 
-class AsDefaultValue extends AbstractParameterAssert
+class AcceptOnly extends AbstractParameterAssert
 {
     /**
      * @var string|array
@@ -76,6 +76,6 @@ class AsDefaultValue extends AbstractParameterAssert
      */
     public function getDescription()
     {
-        return 'Tests if certain parameter of a method has the default value equals determined one';
+        return 'Tests if certain parameter accept determined value type.';
     }
 }

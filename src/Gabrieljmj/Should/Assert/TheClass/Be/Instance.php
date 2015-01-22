@@ -18,10 +18,6 @@ class Instance extends AbstractClassAssert
     
     public function __construct($class, $arg2)
     {
-        if (!is_object($class)) {
-            throw new InvalidArgumentException('Both arguments must be object');
-        }
-        
         parent::__construct($class);
         $this->arg2 = $arg2;
     }
@@ -43,7 +39,11 @@ class Instance extends AbstractClassAssert
      */
     public function execute()
     {
-        return is_a($this->class, $this->arg2);
+        $ref = new \ReflectionClass($this->class);
+        $parent = $ref->getParentClass();
+        $parentName = $parent->name;
+
+        return $ref->isSubclassOf($this->arg2) || $ref->implemetsInterface($this->arg2) ? true : false;
     }
 
     /**
