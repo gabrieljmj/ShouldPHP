@@ -15,6 +15,13 @@ use Gabrieljmj\Should\Options\TypeHinting;
 
 class AcceptOnly extends AbstractParameterAssert
 {
+    private $paramStr = [
+        TypeHinting::ARR => 'array',
+        TypeHinting::CALL => 'callable',
+        TypeHinting::ANYTHING => 'anything',
+        TypeHinting::INSTANCE_OF => 'instance'
+    ];
+
     /**
      * @var string|array
      */
@@ -68,7 +75,19 @@ class AcceptOnly extends AbstractParameterAssert
     public function getFailMessage()
     {
         $class = is_object($this->class) ? get_class($this->class) : $this->class;
-        return $this->execute() ? null : 'The default value of the parameter ' . $this->parameter . ' of the ' . $class . '::' . $this->method . ' is not equal to ' . print_r($this->value);
+
+        $error = 'only ';
+        if ($this->type === TypeHinting::INSTANCE_OF) {
+            $error .= 'instances of ' . TypeHinting::$class;
+        } else {
+            if ($this->type == TypeHinting::ANYTHING) {
+                $error = 'anything';
+            } else {
+                $error .= $this->paramStr[$this->type];
+            }
+        }
+
+        return $this->execute() ? null : 'The parameter ' . $this->parameter . ' of method ' . $class . '::' . $this->method . ' should accept ' . $error . ', but does not';
     }
 
     /**
