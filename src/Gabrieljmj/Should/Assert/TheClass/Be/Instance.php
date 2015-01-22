@@ -47,7 +47,7 @@ class Instance extends AbstractClassAssert
         } elseif ($ref->isSubclassOf($this->arg2)) {
             return true;
         } else {
-            return $this->classToString($this->class) === $this->classToString($this->arg2);
+            return $this->classToStr($this->class) === $this->classToStr($this->arg2);
         }
     }
 
@@ -59,13 +59,8 @@ class Instance extends AbstractClassAssert
      */
     public function getFailMessage()
     {
-        $class = $this->classToString($this->class);
-        $arg2 = $this->classToString($this->arg2);
+        $class = $this->classToStr($this->class);
+        $arg2 = $this->classToStr($this->arg2);
         return $this->execute() ? null : $class . ' is not instance of ' . $arg2;
-    }
-
-    private function classToString($class)
-    {
-        return is_object($class) ? get_class($class) : $class;
     }
 }

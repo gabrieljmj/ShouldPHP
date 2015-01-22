@@ -51,6 +51,8 @@ class Equal extends AbstractClassAssert
      */
     public function getFailMessage()
     {
+        $class = $this->classToStr($this->class);
+        $arg2 = $this->classToStr($this->arg2);
         return $this->execute() ? null : 'The instance of ' . get_class($this->class) . ' is not equal to the another instance of ' . get_class($this->arg2);
     }
 

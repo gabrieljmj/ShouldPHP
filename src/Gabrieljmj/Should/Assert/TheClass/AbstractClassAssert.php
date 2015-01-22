@@ -34,7 +34,7 @@ abstract class AbstractClassAssert extends AbstractAssert
      */
     public function getTestedElement()
     {
-        $class = is_object($this->class) ? get_class($this->class) : $this->class;
+        $class = $this->classToStr($this->class);
         return $class;
     }
 }

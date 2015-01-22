@@ -41,4 +41,9 @@ abstract class AbstractAssert implements AssertInterface
     {
         return $this->message;
     }
+
+    protected function classToStr($class)
+    {
+        return is_object($class) ? get_class($class) : $class;
+    }
 }

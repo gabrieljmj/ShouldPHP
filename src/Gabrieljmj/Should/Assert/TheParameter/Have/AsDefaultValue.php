@@ -55,7 +55,7 @@ class AsDefaultValue extends AbstractParameterAssert
      */
     public function getFailMessage()
     {
-        $class = is_object($this->class) ? get_class($this->class) : $this->class;
+        $class = $this->classToStr($this->class);
         return $this->execute() ? null : 'The default value of the parameter ' . $this->parameter . ' of the ' . $class . '::' . $this->method . ' is not equal to ' . print_r($this->value);
     }
 

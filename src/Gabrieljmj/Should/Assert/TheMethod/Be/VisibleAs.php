@@ -73,7 +73,7 @@ class VisibleAs extends AbstractMethodAssert
      */
     public function getFailMessage()
     {
-        $class = is_object($this->class) ? get_class($this->class) : $this->class;
+        $class = $this->classToStr($this->class);
         return $this->execute() ? null : 'The arguments of the method ' . $class . '::' . $this->method . ' are incorrect';
     }
 }
