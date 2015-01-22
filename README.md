@@ -1,6 +1,6 @@
 ShouldPHP
 =========
-[![Build Status](https://travis-ci.org/GabrielJMJ/ShouldPHP.svg?branch=dev)](https://travis-ci.org/GabrielJMJ/ShouldPHP) [![Status](https://img.shields.io/badge/status-development-blue.svg?style=flat)]
+[![Build Status](https://travis-ci.org/GabrielJMJ/ShouldPHP.svg?branch=dev)](https://travis-ci.org/GabrielJMJ/ShouldPHP) ![Status](https://img.shields.io/badge/status-development-blue.svg?style=flat)
 
 **ShouldPHP** is (or will be) a library for you, developer, to test your classes and objects and their methods and properties with a simple syntax based on "should". The idea came to my mind after seeing the framework [Should.JS](https://github.com/shouldjs/should.js) for [Node.JS](nodejs.org).
 
