@@ -62,6 +62,6 @@ class AsReturn extends AbstractMethodAssert
      */
     public function getFailMessage()
     {
-        return;
+        return $this->execute() ? null : 'The return of the method ' . $this->getTestedElement() . ' ' . count($this->args) > 0 ? 'with the arguments ' . print_r($this->args, true) : null . ' is not equal the expected: ' . print_r($this->expectedReturn, true);
     }
 }
