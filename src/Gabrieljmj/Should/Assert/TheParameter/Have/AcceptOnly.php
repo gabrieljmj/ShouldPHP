@@ -48,7 +48,7 @@ class AcceptOnly extends AbstractParameterAssert
                         return $param->isVariadic();
                     case TypeHinting::INSTANCE_OF:
                         $class = $param->getClass();
-                        $className = $class ==== null ? null : $class->getName();
+                        $className = $class === null ? null : $class->getName();
                         return TypeHinting::$class === $className;
                     default:
                         throw new \Exception('The type of parameter specified is not valid: ' . $this->type);

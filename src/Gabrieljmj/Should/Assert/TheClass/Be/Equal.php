@@ -20,7 +20,7 @@ class Equal extends AbstractClassAssert
     private $arg2;
     
     /**
-     * @param object $arg1
+     * @param object $class
      * @param object $arg2
      */
     public function __construct($class, $arg2)

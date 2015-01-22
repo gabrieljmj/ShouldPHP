@@ -39,7 +39,7 @@ class ArgumentsEqual extends AbstractMethodAssert
             return $param->getName();
         }, $params);
 
-        $this->return = $params;
+        $this->returned = $params;
 
         return $this->expectedArgs === $params;
     }
@@ -62,6 +62,7 @@ class ArgumentsEqual extends AbstractMethodAssert
      */
     public function getFailMessage()
     {
-        return $this->execute() ? null : 'The arguments of the method ' . $class . '::' . $this->method . ' are incorrect. Expcted: ' . print_r($this->excpectedArgs, true) . ' - Returned: ' . print_r($this->returned, true);
+        $class = is_object($class) ? get_class($class) : $class;
+        return $this->execute() ? null : 'The arguments of the method ' . $class . '::' . $this->method . ' are incorrect. Expcted: ' . print_r($this->expectedArgs, true) . ' - Returned: ' . print_r($this->returned, true);
     }
 }

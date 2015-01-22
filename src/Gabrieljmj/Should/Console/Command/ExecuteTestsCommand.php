@@ -43,10 +43,18 @@ class ExecuteTestsCommand extends Command
     private $output;
 
     /**
-     * @var \Gabrieljmj\Should\Collection
+     * @var \Gabrieljmj\Should\Report\Report
      */
     private $report;
 
+    /**
+     * @var \Gabrieljmj\Should\Template\TemplateInterface
+     */
+    private $template;
+
+    /**
+     * @param \Gabrieljmj\Should\Template\TemplateInterface $template
+     */
     public function setTemplate(TemplateInterface $template)
     {
         $this->template = $template;
@@ -256,9 +264,9 @@ class ExecuteTestsCommand extends Command
 
         foreach ($methods as $method) {
             if ($method->isPublic()) {
-                if (strtolower(substr($method->getName(), 0, 4)) === 'test') {
+                if (strtolower(substr($method->name, 0, 4)) === 'test') {
                     $executedMethods++;
-                    call_user_func_array([$instance, $method->getName()], []);
+                    call_user_func_array([$instance, $method->name], []);
                 }
             }
         }
