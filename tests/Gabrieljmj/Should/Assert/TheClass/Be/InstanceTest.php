@@ -10,9 +10,9 @@
  
 namespace Test\Gabrieljmj\Should\Assert\TheClass\Be;
 
-use Gabrieljmj\Should\Assert\TheClass\Be\Equal;
+use Gabrieljmj\Should\Assert\TheClass\Be\Instance;
 
-class EqualTest extends \PHPUnit_Framework_TestCase
+class InstanceTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetterForMessageRetrusnTheCorrectValue()
     {
@@ -22,12 +22,12 @@ class EqualTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($instance->getMessage(), $message);
     }
-
-    public function testGettingTheTestedElement()
+    
+    public function testGettingTestedElement()
     {
         $assert = $this->getSuccessInstance();
 
-        $this->assertEquals('stdClass', $assert->getTestedElement($assert));
+        $this->assertEquals('\Test\Gabrieljmj\Should\Assert\Foo', $assert->getTestedElement($assert));
     }
 
     public function testExecutingWithNotEqualsReturnsFalseBoolean()
@@ -51,23 +51,27 @@ class EqualTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($instance->getFailMessage());
     }
 
+    public function testPassTestingIfIsInstanceOfAnInterface()
+    {
+        $i = new Instance('\Test\Gabrieljmj\Should\Assert\Foo', '\Serializable');
+
+        $this->assertTrue($i->execute());
+    }
+
     public function testGetterForFailureMessageReturnCorrectValueWhenNotPass()
     {
         $i = $this->getFailInstance();
 
-        $this->assertEquals('The instance of stdClass is not equal to the another instance of stdClass', $i->getFailMessage());
+        $this->assertEquals('\Test\Gabrieljmj\Should\Assert\Foo is not instance of \stdClass', $i->getFailMessage());
     }
 
     private function getSuccessInstance()
     {
-        return new Equal(new \stdClass, new \stdClass);
+        return new Instance('\Test\Gabrieljmj\Should\Assert\Foo', '\Test\Gabrieljmj\Should\Assert\Foo');
     }
 
     private function getFailInstance()
     {
-        $i = new \stdClass;
-        $i->foo = 'bar';
-
-        return new Equal(new \stdClass, $i);
+        return new Instance('\Test\Gabrieljmj\Should\Assert\Foo', '\stdClass');
     }
 }

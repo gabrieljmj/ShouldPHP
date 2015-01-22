@@ -10,7 +10,7 @@
  
 namespace Test\Gabrieljmj\Should\Assert;
 
-class Foo
+class Foo implements \Serializable
 {
     public $public;
     protected $protected;
@@ -19,5 +19,13 @@ class Foo
     public function getBar()
     {
         return 'bar';
+    }
+
+    public function serialize()
+    {
+    }
+
+    public function unserialize($str)
+    {
     }
 }

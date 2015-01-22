@@ -10,11 +10,38 @@
 
 namespace Test\Gabrieljmj\Should\Assert\TheMethod\Have;
 
-use Test\Gabrieljmj\Should\Assert\AbstractAssertTest;
 use Gabrieljmj\Should\Assert\TheMethod\Have\AsReturn;
 
-class AsReturnTest extends AbstractAssertTest
+class AsReturnTest extends \PHPUnit_Framework_TestCase
 {
+    public function testExecutingWithInvalidValueReturnsFalseBoolean()
+    {
+        $i = $this->getFailInstance();
+
+        $this->assertFalse($i->execute());
+    }
+
+    public function testExecutingWithValidValueReturnsTrueBoolean()
+    {
+        $i = $this->getSuccessInstance();
+
+        $this->assertTrue($i->execute());
+    }
+
+    public function testGetterForFailureMessageReturnCorrectValueWhenNotPass()
+    {
+        $i = $this->getFailInstance();
+
+        $this->assertEquals('The return of the method \Test\Gabrieljmj\Should\Assert\Foo is not equal the expected: baz', $i->getFailMessage());
+    }
+
+    public function testGetterForFailureMessageReturnsNullWhenTheTestPass()
+    {
+        $i = $this->getSuccessInstance();
+
+        $this->assertNull($i->getFailMessage());
+    }
+
     public function testGettingTestedElement()
     {
         $i = $this->getSuccessInstance();
@@ -22,18 +49,13 @@ class AsReturnTest extends AbstractAssertTest
         $this->assertEquals('\Test\Gabrieljmj\Should\Assert\Foo::getBar', $i->getTestedElement());
     }
 
-    protected function getSuccessInstance()
+    private function getSuccessInstance()
     {
         return new AsReturn('\Test\Gabrieljmj\Should\Assert\Foo', 'getBar', 'bar', []);
     }
 
-    protected function getFailureInstance()
+    private function getFailInstance()
     {
         return new AsReturn('\Test\Gabrieljmj\Should\Assert\Foo', 'getBar', 'baz', []);
-    }
-
-    protected function getFailureMessage()
-    {
-        return 'The return of the method \Test\Gabrieljmj\Should\Assert\Foo is not equal the expected: baz';
     }
 }

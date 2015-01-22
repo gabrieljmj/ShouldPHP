@@ -10,11 +10,19 @@
  
 namespace Test\Gabrieljmj\Should\Assert\TheClass\Have;
 
-use Test\Gabrieljmj\Should\Assert\AbstractAssertTest;
 use Gabrieljmj\Should\Assert\TheClass\Have\TheProperty;
 
-class ThePropertyTest extends AbstractAssertTest
+class ThePropertyTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetterForMessageRetrusnTheCorrectValue()
+    {
+        $message = 'Failure!';
+        $instance = $this->getSuccessInstance();
+        $instance->setMessage($message);
+
+        $this->assertEquals($instance->getMessage(), $message);
+    }
+
     public function testPassWhenCheckAPublicProperty()
     {
         $this->executingTestThatHaveToPass('public');
@@ -30,6 +38,27 @@ class ThePropertyTest extends AbstractAssertTest
         $this->executingTestThatHaveToPass('protected');
     }
 
+    public function testGetterForFailureMessageReturnCorrectValueWhenNotPass()
+    {
+        $i = $this->getFailInstance();
+
+        $this->assertEquals('The class \Test\Gabrieljmj\Should\Assert\Foo has not the property invalid_property', $i->getFailMessage());
+    }
+
+    public function testExecutingWithInvalidValueReturnsFalseBoolean()
+    {
+        $i = $this->getFailInstance();
+
+        $this->assertFalse($i->execute());
+    }
+
+    public function testGetterForFailureMessageReturnsNullWhenTheTestPass()
+    {
+        $i = $this->getSuccessInstance();
+
+        $this->assertNull($i->getFailMessage());
+    }
+
     public function testGettingTestedElement()
     {
         $i = $this->getSuccessInstance();
@@ -37,22 +66,22 @@ class ThePropertyTest extends AbstractAssertTest
         $this->assertEquals('\Test\Gabrieljmj\Should\Assert\Foo', $i->getTestedElement());
     }
 
-    protected function getSuccessInstance()
+    private function getSuccessInstance()
     {
         return new TheProperty('\Test\Gabrieljmj\Should\Assert\Foo', 'public');
     }
 
-    protected function getFailureInstance()
+    private function getFailInstance()
     {
         return new TheProperty('\Test\Gabrieljmj\Should\Assert\Foo', 'invalid_property');
     }
 
-    protected function getFailureMessage()
+    private function getFailureMessage()
     {
         return 'The class \Test\Gabrieljmj\Should\Assert\Foo has not the property invalid_property';
     }
 
-    protected function executingTestThatHaveToPass($property)
+    private function executingTestThatHaveToPass($property)
     {
         $instance = new TheProperty('\Test\Gabrieljmj\Should\Assert\Foo', $property);
 

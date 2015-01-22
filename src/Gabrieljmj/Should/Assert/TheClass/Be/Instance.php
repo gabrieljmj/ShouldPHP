@@ -29,7 +29,7 @@ class Instance extends AbstractClassAssert
      */
     public function getDescription()
     {
-        return 'Tests if the object is of the a class or has this class as one of its parents';
+        return 'Tests if the object is of the a class or has this class as one of its parents.';
     }
 
     /**
@@ -40,10 +40,17 @@ class Instance extends AbstractClassAssert
     public function execute()
     {
         $ref = new \ReflectionClass($this->class);
-        $parent = $ref->getParentClass();
-        $parentName = $parent->name;
+        $arg2Ref = new \ReflectionClass($this->arg2);
 
-        return $ref->isSubclassOf($this->arg2) || $ref->implemetsInterface($this->arg2) ? true : false;
+        if ($arg2Ref->isInterface()) {
+            return $ref->implementsInterface($this->arg2);
+        } elseif ($ref->isSubclassOf($this->arg2)) {
+            return true;
+        } else {
+            return $this->classToString($this->class) === $this->classToString($this->arg2);
+        }
+
+        return false;
     }
 
     /**
@@ -54,6 +61,13 @@ class Instance extends AbstractClassAssert
      */
     public function getFailMessage()
     {
-        
+        $class = $this->classToString($this->class);
+        $arg2 = $this->classToString($this->arg2);
+        return $this->execute() ? null : $this->class . ' is not instance of ' . $arg2;
+    }
+
+    private function classToString($class)
+    {
+        return is_object($class) ? get_class($class) : $class;
     }
 }
