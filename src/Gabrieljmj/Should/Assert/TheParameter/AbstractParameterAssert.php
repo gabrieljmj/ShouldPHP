@@ -15,7 +15,7 @@ use Gabrieljmj\Should\Assert\AbstractAssert;
 abstract class AbstractParameterAssert extends AbstractAssert
 {
     /**
-     * @var string
+     * @var string|object
      */
     protected $class;
     
