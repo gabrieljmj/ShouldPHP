@@ -28,4 +28,16 @@ class Foo implements \Serializable
     public function unserialize($str)
     {
     }
+
+    public function publicMethod()
+    {
+    }
+
+    protected function protectedMethod()
+    {
+    }
+
+    private function privateMethod()
+    {
+    }
 }
