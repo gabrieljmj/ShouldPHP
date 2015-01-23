@@ -10,9 +10,9 @@
  
 namespace Gabrieljmj\Should\Assert\TheProperty\Be;
 
-use Gabrieljmj\Should\Assert\AbstractAssert;
+use Gabrieljmj\Should\Assert\TheProperty\AbstractPropertyAssert;
 
-class Equal extends AbstractAssert
+class Equal extends AbstractPropertyAssert
 {
     private $class;
 
@@ -60,14 +60,13 @@ class Equal extends AbstractAssert
     }
 
     /**
-     * Returns teh fail description
-     * Null case in case of success
+     * Creates the fail message
      *
-     * @return string|null
+     * @return string
      */
-    public function getFailMessage()
+    protected function createFailMessage()
     {
         $class = is_object($this->class) ? get_class($this->class) : $this->class;
-        return $this->execute() ? null : 'The property ' . $this->property . ' of the class ' . $class . ' is not equal to ' . print_r($this->value, true);
+        return 'The property ' . $this->property . ' of the class ' . $class . ' is not equal to ' . print_r($this->value, true);
     }
 }

@@ -40,15 +40,14 @@ class TheProperty extends AbstractClassAssert
     }
 
     /**
-     * Returns teh fail description
-     * Null case in case of success
+     * Creates the fail message
      *
-     * @return string|null
+     * @return string
      */
-    public function getFailMessage()
+    protected function createFailMessage()
     {
         $class = is_object($this->class) ? get_class($this->class) : $this->class;
-        return $this->execute() ? null : 'The class ' . $class . ' has not the property ' . $this->property;
+        return 'The class ' . $class . ' has not the property ' . $this->property;
     }
 
     /**

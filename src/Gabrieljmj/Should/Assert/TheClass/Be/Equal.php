@@ -44,16 +44,15 @@ class Equal extends AbstractClassAssert
     }
 
     /**
-     * Returns teh fail description
-     * Null case in case of success
+     * Creates the fail message
      *
-     * @return string|null
+     * @return string
      */
-    public function getFailMessage()
+    protected function createFailMessage()
     {
         $class = $this->classToStr($this->class);
         $arg2 = $this->classToStr($this->arg2);
-        return $this->execute() ? null : 'The instance of ' . $class . ' is not equal to the another instance of ' . $arg2;
+        return 'The instance of ' . $class . ' is not equal to the another instance of ' . $arg2;
     }
 
     /**

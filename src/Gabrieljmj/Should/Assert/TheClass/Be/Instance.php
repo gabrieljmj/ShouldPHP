@@ -52,15 +52,14 @@ class Instance extends AbstractClassAssert
     }
 
     /**
-     * Returns teh fail description
-     * Null case in case of success
+     * Creates the fail message
      *
-     * @return string|null
+     * @return string
      */
-    public function getFailMessage()
+    protected function createFailMessage()
     {
         $class = $this->classToStr($this->class);
         $arg2 = $this->classToStr($this->arg2);
-        return $this->execute() ? null : $class . ' is not instance of ' . $arg2;
+        return $class . ' is not instance of ' . $arg2;
     }
 }

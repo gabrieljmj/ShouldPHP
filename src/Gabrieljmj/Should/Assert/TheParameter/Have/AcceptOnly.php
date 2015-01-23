@@ -67,12 +67,11 @@ class AcceptOnly extends AbstractParameterAssert
     }
 
     /**
-     * Returns teh fail description
-     * Null case in case of success
+     * Creates the fail message
      *
-     * @return string|null
+     * @return string
      */
-    public function getFailMessage()
+    protected function createFailMessage()
     {
         $class = is_object($this->class) ? get_class($this->class) : $this->class;
 
@@ -87,7 +86,7 @@ class AcceptOnly extends AbstractParameterAssert
             }
         }
 
-        return $this->execute() ? null : 'The parameter ' . $this->parameter . ' of method ' . $class . '::' . $this->method . ' should accept ' . $error . ', but does not';
+        return 'The parameter ' . $this->parameter . ' of method ' . $class . '::' . $this->method . ' should accept ' . $error . ', but does not';
     }
 
     /**

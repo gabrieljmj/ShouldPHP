@@ -66,14 +66,13 @@ class VisibleAs extends AbstractMethodAssert
     }
 
     /**
-     * Returns teh fail description
-     * Null case in case of success
+     * Creates the fail message
      *
-     * @return string|null
+     * @return string
      */
-    public function getFailMessage()
+    protected function createFailMessage()
     {
         $class = $this->classToStr($this->class);
-        return $this->execute() ? null : 'The arguments of the method ' . $class . '::' . $this->method . ' are incorrect';
+        return 'The arguments of the method ' . $class . '::' . $this->method . ' are incorrect';
     }
 }

@@ -42,8 +42,30 @@ abstract class AbstractAssert implements AssertInterface
         return $this->message;
     }
 
+    /**
+     * Returns teh fail description
+     * Null case in case of success
+     *
+     * @return string|null
+     */
+    public function getFailMessage()
+    {
+        return $this->execute() ? null : $this->createFailMessage();
+    }
+
+    /**
+     * @param object|string $class
+     * @return string
+     */
     protected function classToStr($class)
     {
         return is_object($class) ? get_class($class) : $class;
     }
+
+    /**
+     * Creates the fail message
+     *
+     * @return string
+     */
+    abstract protected function createFailMessage();
 }
