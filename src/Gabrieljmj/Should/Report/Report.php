@@ -129,15 +129,17 @@ class Report
             'elements' => []
         ];
 
-        foreach ($this->getAssertList() as $type => $elements) {
-            foreach ($elements as $element => $status) {
-                foreach ($status as $assert) {
-                    $report['elements'][$type][$element][$status][] = [
-                        'name' => $assert->getName(),
-                        'description' => $assert->getDescription(),
-                        'fail_msg' => $assert->getFailMessage()
-                    ];
-                 }
+        foreach ($this->getAssertList() as $typeName => $type) {
+            foreach ($type as $status => $elements) {
+                foreach ($elements as $elementName => $element) {
+                    foreach ($element as $assert) {
+                        $report['elements'][$typeName][$elementName][$status][] = [
+                            'name' => $assert->getName(),
+                            'description' => $assert->getDescription(),
+                            'fail_msg' => $assert->getFailMessage()
+                        ];
+                    }
+                }
             }
         }
 

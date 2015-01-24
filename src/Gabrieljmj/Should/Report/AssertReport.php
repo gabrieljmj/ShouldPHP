@@ -92,4 +92,14 @@ class AssertReport
     {
         return $this->assert->execute() ? 'success' : 'fail';
     }
+
+    /**
+     * Returns the assert description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->assert->getDescription();
+    }
 }
