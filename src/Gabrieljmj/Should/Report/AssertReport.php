@@ -102,4 +102,14 @@ class AssertReport
     {
         return $this->assert->getDescription();
     }
+
+    /**
+     * Returns the custom message in case of failure
+     *
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->assert->getMessage();
+    }
 }

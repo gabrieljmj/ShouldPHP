@@ -55,7 +55,7 @@ class StandardTemplate implements TemplateInterface
                     foreach ($fails as $key => $fail) {
                         $n = $key + 1;
                         $name = $fail->getName();
-                        $failmsg = $fail->getFailMessage();
+                        $failmsg = $fail->getMessage() !== null ? $fail->getMessage() : $fail->getFailMessage();
                         $return[] = "{$n}) {$name} - {$failmsg}";
                     }
                 }

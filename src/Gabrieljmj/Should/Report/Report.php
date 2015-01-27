@@ -136,7 +136,8 @@ class Report
                         $report['elements'][$typeName][$elementName][$status][] = [
                             'name' => $assert->getName(),
                             'description' => $assert->getDescription(),
-                            'fail_msg' => $assert->getFailMessage()
+                            'fail_message' => $assert->getFailMessage(),
+                            'message' => $assert->getMessage()
                         ];
                     }
                 }
