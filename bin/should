@@ -3,14 +3,31 @@
 require_once 'vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Gabrieljmj\Should\Console\Command\ExecuteTestsCommand;
 use Gabrieljmj\Should\Console\Command\HelpCommand;
 use Monolog\Logger;
 use Gabrieljmj\Should\Template\StandardTemplate;
+use Gabrieljmj\Should\Event\ExecutionEventInterface;
+use Gabrieljmj\Should\Event\ExecutionEvent;
+use Gabrieljmj\Should\Logger\MonologAdapter;
+
+$eventDispatcher = new EventDispatcher();
+$eventDispatcher->addListener('should.execute', function (ExecutionEventInterface $event) {
+    $output = $event->getOutput();
+    $report = $event->getReport();
+    $template = $event->getTemplate();
+
+    $output->writeln($template->render($report));
+});
+
+$event = new ExecutionEvent();
+$event->setTemplate(new StandardTemplate());
 
 $command = new ExecuteTestsCommand();
-$command->setTemplate(new StandardTemplate());
-$command->setLogger(new Logger('tests'));
+$command->setEvent($event);
+$command->setLogger(new MonologAdapter('tests'));
+$command->setEventDispatcher($eventDispatcher);
 $app = new Application();
 $app->add($command);
 $app->add(new HelpCommand());
