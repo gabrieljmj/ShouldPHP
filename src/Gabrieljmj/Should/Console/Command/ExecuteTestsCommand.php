@@ -16,14 +16,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
-use Psr\Log\LogLevel;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 use Gabrieljmj\Should\Ambient\AmbientInterface;
 use Gabrieljmj\Should\Template\TemplateInterface;
 use Gabrieljmj\Should\Report\Report;
-use \Exception;
+use Gabrieljmj\Should\Event\ExecutionEventInterface;
+use Gabrieljmj\Should\Logger\LoggerAdapterInterface;
 
 class ExecuteTestsCommand extends Command
 {
@@ -48,23 +48,32 @@ class ExecuteTestsCommand extends Command
     private $report;
 
     /**
-     * @var \Gabrieljmj\Should\Template\TemplateInterface
+     * @var \Symfony\Component\EventDispatcher\Event
      */
-    private $template;
+    private $eventDispatcher;
 
     /**
-     * @param \Gabrieljmj\Should\Template\TemplateInterface $template
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
-    public function setTemplate(TemplateInterface $template)
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
     {
-        $this->template = $template;
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function setEvent(ExecutionEventInterface $event)
+    {
+        $this->event = $event;
     }
 
     /**
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Gabrieljmj\Should\Logger\LoggerAdapterInterface $logger
      */
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerAdapterInterface $logger)
     {
+        if (!$logger instanceof LoggerInterface) {
+            throw new \Exception('as');
+        }
+
         $this->logger = $logger;
     }
 
@@ -122,7 +131,10 @@ class ExecuteTestsCommand extends Command
             }
         }
 
-        $output->writeln($this->template->render($this->report));
+        $this->event->setOutput($output);
+        $this->event->setReport($this->report);
+
+        $this->eventDispatcher->dispatch('should.execute', $this->event);
     }
 
     /**
@@ -142,13 +154,13 @@ class ExecuteTestsCommand extends Command
     private function validateFile($file)
     {
         if (!file_exists($file)) {
-            throw new Exception('The file of an ambient was not found: ' . $file);
+            throw new \Exception('The file of an ambient was not found: ' . $file);
         }
 
         $ambientInstance = require $file;
 
         if (!is_object($ambientInstance) || !$ambientInstance instanceof AmbientInterface) {
-            throw new Exception('The file of an ambient does not return an instance of a valid ambient');
+            throw new \Exception('The file of an ambient does not return an instance of a valid ambient');
         }
 
         return $ambientInstance;
@@ -164,7 +176,7 @@ class ExecuteTestsCommand extends Command
         $report = $ambient->getReport();
 
         if ($this->input->getOption('save')) {
-            $this->logger->pushHandler(new StreamHandler($this->input->getOption('save'), Logger::INFO));
+            $this->logger->setFile($this->input->getOption('save'));
             $this->logger->info($report->serialize());
         }
 
