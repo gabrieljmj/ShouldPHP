@@ -11,6 +11,7 @@
 namespace Gabrieljmj\Should\Assert\TheParameter;
 
 use Gabrieljmj\Should\Assert\AbstractAssert;
+use Gabrieljmj\Should\Exception\ShouldException;
 
 abstract class AbstractParameterAssert extends AbstractAssert
 {
@@ -54,13 +55,14 @@ abstract class AbstractParameterAssert extends AbstractAssert
         return $class . '::' . $this->method . '([$' . $this->parameter . '])';
     }
 
+    /**
+     * @param string|object $class
+     * @param string        $method
+     * @param string        $parameter
+     */
     private function validateData($class, $method, $parameter)
     {
-        $class = $this->classToStr($class);
-
-        if (!class_exists($class)) {
-            ShouldException::classDoesNotExists($class);
-        }
+        $this->validateClass($class);
 
         if (!method_exists($class, $method)) {
             ShouldException::methodDoesNotExists($class, $method);
@@ -68,11 +70,11 @@ abstract class AbstractParameterAssert extends AbstractAssert
 
         $ref = new \ReflectionMethod($class, $method);
         $paramsNames = array_map(function ($param) {
-            return $arr->name;
+            return $param->name;
         }, $ref->getParameters());
 
         if (!in_array($parameter, $paramsNames)) {
-            ShouldException::trigger($class, $method, $parameter);
+            ShouldException::parameterDoesNotExists($class, $method, $parameter);
         }
     }
 }

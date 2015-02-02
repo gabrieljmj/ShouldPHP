@@ -24,6 +24,8 @@ abstract class AbstractClassAssert extends AbstractAssert
      */
     public function __construct($class)
     {
+        $this->validateClass($class);
+
         $this->class = $class;
     }
 

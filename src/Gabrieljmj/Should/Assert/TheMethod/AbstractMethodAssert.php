@@ -11,6 +11,7 @@
 namespace Gabrieljmj\Should\Assert\TheMethod;
 
 use Gabrieljmj\Should\Assert\AbstractAssert;
+use Gabrieljmj\Should\Exception\ShouldException;
 
 abstract class AbstractMethodAssert extends AbstractAssert
 {
@@ -30,6 +31,8 @@ abstract class AbstractMethodAssert extends AbstractAssert
      */
     public function __construct($class, $method)
     {
+        $this->validateData($class, $method);
+
         $this->class = $class;
         $this->method = $method;
     }
@@ -43,5 +46,18 @@ abstract class AbstractMethodAssert extends AbstractAssert
     {
         $class = $this->classToStr($this->class);
         return $class . '::' . $this->method;
+    }
+
+    /**
+     * @param string|object $class
+     * @param string        $method
+     */
+    private function validateData($class, $method)
+    {
+        $this->validateClass($class);
+
+        if (!method_exists($class, $method)) {
+            ShouldException::methodDoesNotExists($class, $method);
+        }
     }
 }

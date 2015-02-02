@@ -19,8 +19,8 @@ class ShouldMethodTest extends \PHPUnit_Framework_TestCase
 {
     public function testSettingPropertiesBeAndHave()
     {
-        $class = 'Foo';
-        $method = 'bar';
+        $class = '\Test\Gabrieljmj\Should\Assert\Foo';
+        $method = 'getBar';
         $should = new ShouldMethod($class, $method);
         $have = new Have($class, $method);
         $be = new Be($class, $method);
@@ -31,8 +31,8 @@ class ShouldMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testAddingAssertTheMethodSpecifiedReturnsCorrectly()
     {
-        $class = 'Foo';
-        $method = 'bar';
+        $class = '\Test\Gabrieljmj\Should\Assert\Foo';
+        $method = 'getBar';
         $args = ['arg1'];
         $should = new ShouldMethod($class, $method);
         $should->have->argumentsEqual($args);

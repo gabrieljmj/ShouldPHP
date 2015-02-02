@@ -21,4 +21,11 @@ class Be extends AbstractPropertyCondition
         $instance->setMessage($message);
         $this->addAssert($instance);
     }
+
+    public function visible($as, $message = null)
+    {
+        $instance = new VisibileAs($this->class, $this->property, $as);
+        $instance->setMessage($message);
+        $this->addAssert($instance);
+    }
 }

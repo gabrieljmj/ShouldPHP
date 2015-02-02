@@ -12,6 +12,7 @@ namespace Gabrieljmj\Should\Condition\TheParameter;
 
 use Gabrieljmj\Should\Condition\TheParameter\AbstractParameterCondition;
 use Gabrieljmj\Should\Assert\TheParameter\Have\AsDefaultValue;
+use Gabrieljmj\Should\Assert\TheParameter\Have\AcceptOnly;
 
 class Have extends AbstractParameterCondition
 {

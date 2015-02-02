@@ -28,13 +28,6 @@ class AsReturnTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($i->execute());
     }
 
-    public function testGetterForFailureMessageReturnCorrectValueWhenNotPass()
-    {
-        $i = $this->getFailInstance();
-
-        $this->assertEquals('The return of the method \Test\Gabrieljmj\Should\Assert\Foo is not equal the expected: baz', $i->getFailMessage());
-    }
-
     public function testGetterForFailureMessageReturnsNullWhenTheTestPass()
     {
         $i = $this->getSuccessInstance();

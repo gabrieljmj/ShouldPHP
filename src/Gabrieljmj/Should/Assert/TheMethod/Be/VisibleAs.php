@@ -12,6 +12,7 @@ namespace Gabrieljmj\Should\Assert\TheMethod\Be;
 
 use Gabrieljmj\Should\Assert\TheMethod\AbstractMethodAssert;
 use Gabrieljmj\Should\Options\Visibility;
+use Gabrieljmj\Should\Exception\InvalidVisibilityTypeException;
 
 class VisibleAs extends AbstractMethodAssert
 {
@@ -51,7 +52,7 @@ class VisibleAs extends AbstractMethodAssert
             case Visibility::AS_PRIVATE:
                 return $ref->isPrivate();
             default:
-                throw new \Exception('Visibility id not found :' . $this->visibility);
+                InvalidVisibilityTypeException::trigger($this->visibility);
         }
     }
 
@@ -62,7 +63,7 @@ class VisibleAs extends AbstractMethodAssert
      */
     public function getDescription()
     {
-        return 'Tests if the visibility is the same as the determined';
+        return 'Tests if the visibility of a method is the same as the determined.';
     }
 
     /**

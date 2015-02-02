@@ -18,7 +18,7 @@ class AcceptOnly extends AbstractParameterAssert
     private $paramStr = [
         TypeHinting::ARR => 'array',
         TypeHinting::CALL => 'callable',
-        TypeHinting::ANYTHING => 'anything',
+        TypeHinting::VARIADIC => 'variadic',
         TypeHinting::INSTANCE_OF => 'instance'
     ];
 

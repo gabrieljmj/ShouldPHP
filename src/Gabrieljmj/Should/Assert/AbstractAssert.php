@@ -11,7 +11,7 @@
 namespace Gabrieljmj\Should\Assert;
 
 use Gabrieljmj\Should\Assert\AssertInterface;
-use Gabrieljmj\Should\Exception\AssertException;
+use Gabrieljmj\Should\Exception\ShouldException;
 
 abstract class AbstractAssert implements AssertInterface
 {
@@ -60,6 +60,18 @@ abstract class AbstractAssert implements AssertInterface
     protected function classToStr($class)
     {
         return is_object($class) ? get_class($class) : $class;
+    }
+
+    /**
+     * @param string|object $class
+     */
+    protected function validateClass($class)
+    {
+        $class = $this->classToStr($class);
+
+        if (!class_exists($class)) {
+            ShouldException::classDoesNotExists($class);
+        }
     }
 
     /**

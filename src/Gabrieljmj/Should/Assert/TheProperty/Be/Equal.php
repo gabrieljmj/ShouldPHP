@@ -14,16 +14,11 @@ use Gabrieljmj\Should\Assert\TheProperty\AbstractPropertyAssert;
 
 class Equal extends AbstractPropertyAssert
 {
-    private $class;
-
-    private $property;
-
     private $value;
 
     public function __construct($class, $property, $value)
     {
-        $this->class = $class;
-        $this->property = $property;
+        parent::__construct($class, $property);
         $this->value = $value;
     }
 

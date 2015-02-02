@@ -17,7 +17,7 @@ use Gabrieljmj\Should\Exception\PropertyDoesNotExistsException;
 use Gabrieljmj\Should\Exception\MethodDoesNotExistsException;
 use Gabrieljmj\Should\Exception\ParameterDoesNotExistsException;
 
-class ShhouldException
+class ShouldException
 {
     /**
      * @param string $type
@@ -61,7 +61,7 @@ class ShhouldException
      * @param string        $method
      * @throws \Gabrieljmj\Should\Exception\MethodDoesNotExistsException
      */
-    public statiC function methodDoesNotExistsException($class, $method)
+    public statiC function methodDoesNotExists($class, $method)
     {
         MethodDoesNotExistsException::trigger($class, $method);
     }

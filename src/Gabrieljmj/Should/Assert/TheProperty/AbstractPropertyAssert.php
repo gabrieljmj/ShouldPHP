@@ -11,6 +11,7 @@
 namespace Gabrieljmj\Should\Assert\TheProperty;
 
 use Gabrieljmj\Should\Assert\AbstractAssert;
+use Gabrieljmj\Should\Exception\ShouldException;
 
 abstract class AbstractPropertyAssert extends AbstractAssert
 {
@@ -24,6 +25,8 @@ abstract class AbstractPropertyAssert extends AbstractAssert
      */
     public function __construct($class, $property)
     {
+        $this->validateData($class, $property);
+
         $this->class = $class;
         $this->property = $property;
     }
@@ -37,5 +40,16 @@ abstract class AbstractPropertyAssert extends AbstractAssert
     {
         $class = $this->classToStr($this->class);
         return $class . '::$' . $this->property;
+    }
+
+    private function validateData($class, $property)
+    {
+        $this->validateClass($class);
+
+        $ref = new \ReflectionClass($class);
+
+        if (!$ref->hasProperty($property)) {
+            ShouldException::propertyDoesNotExists($property);
+        }
     }
 }
