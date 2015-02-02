@@ -14,7 +14,7 @@ class TypeHinting
 {
     const ARR = 1;
     const CALL = 2;
-    const ANYTHING = 3;
+    const VARIADIC = 3;
     const INSTANCE_OF = 4;
 
     public static $class;

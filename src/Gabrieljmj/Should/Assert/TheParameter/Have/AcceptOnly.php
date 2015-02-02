@@ -51,7 +51,7 @@ class AcceptOnly extends AbstractParameterAssert
                         return $param->isArray();
                     case TypeHinting::CALL:
                         return $param->isCallable();
-                    case TypeHinting::ANYTHING:
+                    case TypeHinting::VARIADIC:
                         return $param->isVariadic();
                     case TypeHinting::INSTANCE_OF:
                         $class = $param->getClass();
@@ -79,8 +79,8 @@ class AcceptOnly extends AbstractParameterAssert
         if ($this->type === TypeHinting::INSTANCE_OF) {
             $error .= 'instances of ' . TypeHinting::$class;
         } else {
-            if ($this->type == TypeHinting::ANYTHING) {
-                $error = 'anything';
+            if ($this->type == TypeHinting::VARIADIC) {
+                $error = 'variadic';
             } else {
                 $error .= $this->paramStr[$this->type];
             }
