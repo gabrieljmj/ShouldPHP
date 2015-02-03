@@ -28,7 +28,7 @@ use Gabrieljmj\Should\Logger\LoggerAdapterInterface;
 class ExecuteTestsCommand extends Command
 {
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var \Gabrieljmj\Should\Logger\LoggerAdapterInterface
      */
     private $logger;
 

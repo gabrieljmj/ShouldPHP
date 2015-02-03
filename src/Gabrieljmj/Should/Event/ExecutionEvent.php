@@ -29,6 +29,11 @@ class ExecutionEvent extends Event implements ExecutionEventInterface
     private $report;
 
     /**
+     * @var \Gabrieljmj\Should\Template\TemplateInterface
+     */
+    private $template;
+
+    /**
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      */
     public function setOutput(OutputInterface $output)
@@ -44,6 +49,9 @@ class ExecutionEvent extends Event implements ExecutionEventInterface
         $this->report = $report;
     }
 
+    /**
+     * @param \Gabrieljmj\Should\Template\TemplateInterface $template
+     */
     public function setTemplate(TemplateInterface $template)
     {
         $this->template = $template;
@@ -65,6 +73,9 @@ class ExecutionEvent extends Event implements ExecutionEventInterface
         return $this->report;
     }
 
+    /**
+     * @return \Gabrieljmj\Should\Template\TemplateInterface
+     */
     public function getTemplate()
     {
         return $this->template;
