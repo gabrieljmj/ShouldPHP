@@ -76,13 +76,4 @@ class ShouldException
     {
         ParameterDoesNotExistsException::trigger($class, $method, $parameter);
     }
-
-    /**
-     * @param string|object $class
-     * @return string
-     */
-    private function classToString($class)
-    {
-        return is_object($class) ? get_class($class) : $class;
-    }
 }

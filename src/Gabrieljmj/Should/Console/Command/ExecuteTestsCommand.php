@@ -48,9 +48,14 @@ class ExecuteTestsCommand extends Command
     private $report;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\Event
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
     private $eventDispatcher;
+
+    /**
+     * @var \Symfony\Component\EventDispatcher\Event
+     */
+    private $event;
 
     /**
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface
@@ -60,6 +65,9 @@ class ExecuteTestsCommand extends Command
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * @param \Symfony\Component\EventDispatcher\Event $event
+     */
     public function setEvent(ExecutionEventInterface $event)
     {
         $this->event = $event;
@@ -71,7 +79,7 @@ class ExecuteTestsCommand extends Command
     public function setLogger(LoggerAdapterInterface $logger)
     {
         if (!$logger instanceof LoggerInterface) {
-            throw new \Exception('as');
+            throw new \Exception('Logger should impements Psr\Log\LoggerInterface');
         }
 
         $this->logger = $logger;
@@ -179,8 +187,6 @@ class ExecuteTestsCommand extends Command
             $this->logger->setFile($this->input->getOption('save'));
             $this->logger->info($report->serialize());
         }
-
-        $name = $report->getName();
 
         if ($this->report === null) {
             $this->report = new Report('all_tested');

@@ -24,7 +24,7 @@ class ExecutionEvent extends Event implements ExecutionEventInterface
     private $output;
 
     /**
-     * @var Gabrieljmj\Should\Report\Report
+     * @var \Gabrieljmj\Should\Report\Report
      */
     private $report;
 
