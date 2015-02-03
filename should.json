@@ -1,8 +1,0 @@
-{
-    "ambients": [
-        "s\\TestAmbient"
-    ],
-    "config": {
-        "logfile": "tests.log"
-    }
-}
