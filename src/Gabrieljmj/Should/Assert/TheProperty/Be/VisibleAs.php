@@ -16,6 +16,8 @@ use Gabrieljmj\Should\Options\Visibility;
 
 class VisibleAs extends AbstractPropertyAssert
 {
+    use \Gabrieljmj\Should\Assert\Traits\VisibilityAssertTrait;
+
     private $visibility;
 
     private $texts = [
@@ -39,16 +41,7 @@ class VisibleAs extends AbstractPropertyAssert
     {
         $ref = new \ReflectionProperty($this->class, $this->property);
 
-        switch($this->visibility){
-            case Visibility::AS_PUBLIC:
-                return $ref->isPublic();
-            case Visibility::AS_PROTECTED:
-                return $ref->isProtected();
-            case Visibility::AS_PRIVATE:
-                return $ref->isPrivate();
-            default:
-                ShouldException::invalidVisibilityType($this->visibility);
-        }
+        return $this->check($ref, $this->visibility);
     }
 
     /**

@@ -16,6 +16,8 @@ use Gabrieljmj\Should\Exception\InvalidVisibilityTypeException;
 
 class VisibleAs extends AbstractMethodAssert
 {
+    use \Gabrieljmj\Should\Assert\Traits\VisibilityAssertTrait;
+
     /**
      * Visibility (public, private, protected)
      * Use the constants of \Gabrieljmj\Should\Options\Visibility
@@ -44,16 +46,7 @@ class VisibleAs extends AbstractMethodAssert
     {
         $ref = new \ReflectionMethod($this->class, $this->method);
 
-        switch ($this->visibility) {
-            case Visibility::AS_PUBLIC:
-                return $ref->isPublic();
-            case Visibility::AS_PROTECTED:
-                return $ref->isProtected();
-            case Visibility::AS_PRIVATE:
-                return $ref->isPrivate();
-            default:
-                InvalidVisibilityTypeException::trigger($this->visibility);
-        }
+        return $this->check($ref, $this->visibility);
     }
 
     /**
