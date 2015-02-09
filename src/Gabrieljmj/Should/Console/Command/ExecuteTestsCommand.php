@@ -15,7 +15,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
@@ -24,7 +23,6 @@ use Gabrieljmj\Should\Template\TemplateInterface;
 use Gabrieljmj\Should\Report\Report;
 use Gabrieljmj\Should\Event\ExecutionEventInterface;
 use Gabrieljmj\Should\Logger\LoggerAdapterInterface;
-use Gabrieljmj\Should\Exception\ConsoleException;
 use Gabrieljmj\Should\Runner\RunnerInterface;
 
 class ExecuteTestsCommand extends Command
@@ -40,7 +38,7 @@ class ExecuteTestsCommand extends Command
     private $eventDispatcher;
 
     /**
-     * @var \Gabrieljmj\Should\Event\ExecutionEventInterface
+     * @var \Symfony\Component\EventDispatcher\Event
      */
     private $event;
 
@@ -50,7 +48,7 @@ class ExecuteTestsCommand extends Command
     private $runners = [];
 
     /**
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
      */
     public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
     {
@@ -58,10 +56,14 @@ class ExecuteTestsCommand extends Command
     }
 
     /**
-     * @param \Gabrieljmj\Should\Event\ExecutionEventInterface $event
+     * @param \Symfony\Component\EventDispatcher\Event $event
      */
-    public function setEvent(ExecutionEventInterface $event)
+    public function setEvent(Event $event)
     {
+        if (!$event instanceof ExecutionEventInterface) {
+            throw new \InvalidArgumentException('Argument passed shoud be instance of ExecutionEventInterface');
+        }
+
         $this->event = $event;
     }
 

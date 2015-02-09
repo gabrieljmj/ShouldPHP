@@ -13,6 +13,7 @@ namespace Gabrieljmj\Should\Runner;
 use Gabrieljmj\Should\Runner\AbstractRunner;
 use Gabrieljmj\Should\Runner\Rule\RuleInterface;
 use Gabrieljmj\Should\Report\Report;
+use Gabrieljmj\Should\Runner\Rule\Json\JsonRuleInterface;
 
 class JsonRunner extends AbstractRunner
 {
@@ -93,6 +94,6 @@ class JsonRunner extends AbstractRunner
 
     protected function acceptRule(RuleInterface $rule)
     {
-        return false;
+        return $rule instanceof JsonRuleInterface;
     }
 }

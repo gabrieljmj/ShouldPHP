@@ -50,13 +50,14 @@ class DirectoryRunner extends AbstractRunner
             foreach ($entries as $key => $name) {
                 $files[$key] = $name;
                 $e = explode('\\', $name);
-                if (end($e) === '.' || end(explode('\\', $name)) === '..' || is_dir($name)) {
+                if (end($e) === '.' || end($e) === '..' || is_dir($name)) {
                     unset($files[$key]);
                 }
             }
         }
 
         $ambients = ['files' => [], 'classes' => []];
+        $classesReports = [];
 
         foreach ($files as $file) {
             $require = require_once $file;
