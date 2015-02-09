@@ -13,6 +13,7 @@ namespace Gabrieljmj\Should\Runner;
 use Gabrieljmj\Should\Runner\AbstractRunner;
 use Gabrieljmj\Should\Runner\Rule\AmbientClass\AbientClassRunnerInterface;
 use Gabrieljmj\Should\Runner\Rule\RuleInterface;
+use Gabrieljmj\Should\Ambient\AmbientInterface;
 
 class AmbientClassRunner extends AbstractRunner
 {
@@ -63,7 +64,7 @@ class AmbientClassRunner extends AbstractRunner
     private function validateClass($class)
     {
         if (!class_exists($class)) {
-            if (!class_exists(str_replace('/', '\\', $param))) {
+            if (!class_exists(str_replace('/', '\\', $class))) {
                 AmbientClassDoesNotExistException::trigger($class);
             }
         } elseif (!$class instanceof AmbientInterface) {

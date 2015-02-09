@@ -37,6 +37,6 @@ class Suffix extends AbstractDirectoryRule
      */
     protected function appliesTheRule($file)
     {
-        return substr(end(explode('\\', $file)), -strlen($this->suffix)) !== $this->suffix);
+        return substr(end(explode('\\', $file)), -strlen($this->suffix)) !== $this->suffix;
     }
 }
