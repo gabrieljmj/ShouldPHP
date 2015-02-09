@@ -14,6 +14,7 @@ use Gabrieljmj\Should\Runner\AbstractRunner;
 use Gabrieljmj\Should\Runner\Rule\Directory\AmbientFileRuleInterface;
 use Gabrieljmj\Should\Runner\Rule\RuleInterface;
 use Gabrieljmj\Should\Exception\AmbientFileIsDoesNotReturnAValidAmbientInstanceException;
+use Gabrieljmj\Should\Ambient\AmbientInterface;
 
 class AmbientFileRunner extends AbstractRunner
 {
