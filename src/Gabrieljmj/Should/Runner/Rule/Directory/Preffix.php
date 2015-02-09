@@ -37,6 +37,7 @@ class Preffix extends AbstractDirectoryRule
      */
     protected function appliesTheRule($file)
     {
-        return substr(end(explode('\\', $file)), 0, strlen($this->preffix)) === $this->preffix;
+        $e = explode('\\', $file);
+        return substr(end($e), 0, strlen($this->preffix)) === $this->preffix;
     }
 }

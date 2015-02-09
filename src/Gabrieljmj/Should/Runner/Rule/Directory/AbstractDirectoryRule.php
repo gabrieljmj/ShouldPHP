@@ -32,7 +32,8 @@ abstract class AbstractDirectoryRule implements DirectoryRuleInterface
 
         foreach ($entries as $key => $name) {
             $files[$key] = $name;
-            if (end(explode('\\', $name)) === '.' || end(explode('\\', $name)) === '..' || is_dir($name) || !$this->appliesTheRule($name)) {
+            $e = explode('\\', $name);
+            if (end($e) === '.' || end($e) === '..' || is_dir($name) || !$this->appliesTheRule($name)) {
                 unset($files[$key]);
             }
         }

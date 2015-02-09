@@ -16,10 +16,12 @@ use Gabrieljmj\Should\Report\Report;
 
 class JsonRunner extends AbstractRunner
 {
+    private $runners;
+
     public function __construct(array $runners)
     {
         parent::__construct();
-        
+
         foreach ($runners as $runner) {
             if (!$runner instanceof RunnerInterface) {
                 throw new \InvalidArgumentException('A runner passed is not instance of RunnerInterface');

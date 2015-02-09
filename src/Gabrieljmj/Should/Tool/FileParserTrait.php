@@ -14,6 +14,7 @@ trait FileParserTrait
 {
     protected function getExt($file)
     {
-        return end(explode('.', $file));
+        $e = explode('.', $file);
+        return end($e);
     }
 }

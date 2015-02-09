@@ -49,7 +49,8 @@ class DirectoryRunner extends AbstractRunner
 
             foreach ($entries as $key => $name) {
                 $files[$key] = $name;
-                if (end(explode('\\', $name)) === '.' || end(explode('\\', $name)) === '..' || is_dir($name)) {
+                $e = explode('\\', $name);
+                if (end($e) === '.' || end(explode('\\', $name)) === '..' || is_dir($name)) {
                     unset($files[$key]);
                 }
             }
