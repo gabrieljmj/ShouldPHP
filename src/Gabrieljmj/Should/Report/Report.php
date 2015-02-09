@@ -45,7 +45,7 @@ class Report
      *
      * @var array
      */
-    private $assertList;
+    private $assertList = [];
 
     public function __construct($name)
     {

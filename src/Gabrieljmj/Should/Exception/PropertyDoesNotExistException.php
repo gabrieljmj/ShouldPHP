@@ -12,11 +12,11 @@ namespace Gabrieljmj\Should\Exception;
 
 use Gabrieljmj\Should\Exception\ExceptionCodes;
 
-class ClassDoesNotExistsException extends \InvalidArgumentException
+class PropertyDoesNotExistException extends \InvalidArgumentException
 {
-    public static function trigger($class)
+    public static function trigger($class, $property)
     {
         $class = is_object($class) ? get_class($class) : $class;
-        throw new ClassDoesNotExistsException('The class ' . $class . ' does not exists', ExceptionCodes::CLASS_DOES_NOT_EXISTS);
+        throw new PropertyDoesNotExistException('The property ' . $class . '::$' . $property . ' does not exist', ExceptionCodes::PROPERTY_DOES_NOT_EXIST);
     }
 }

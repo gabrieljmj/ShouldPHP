@@ -12,10 +12,10 @@ namespace Gabrieljmj\Should\Exception;
 
 use Gabrieljmj\Should\Exception\InvalidVisibilityTypeException;
 use Gabrieljmj\Should\Exception\InvalidTypeHintingException;
-use Gabrieljmj\Should\Exception\ClassDoesNotExistsException;
-use Gabrieljmj\Should\Exception\PropertyDoesNotExistsException;
-use Gabrieljmj\Should\Exception\MethodDoesNotExistsException;
-use Gabrieljmj\Should\Exception\ParameterDoesNotExistsException;
+use Gabrieljmj\Should\Exception\ClassDoesNotExistException;
+use Gabrieljmj\Should\Exception\PropertyDoesNotExistException;
+use Gabrieljmj\Should\Exception\MethodDoesNotExistException;
+use Gabrieljmj\Should\Exception\ParameterDoesNotExistException;
 
 class ShouldException
 {
@@ -39,41 +39,41 @@ class ShouldException
     
     /**
      * @param string|object $class
-     * @throws \Gabrieljmj\Should\Exception\ClassDoesNotExistsException
+     * @throws \Gabrieljmj\Should\Exception\ClassDoesNotExistException
      */
-    public static function classDoesNotExists($class)
+    public static function classDoesNotExist($class)
     {
-        ClassDoesNotExistsException::trigger($class);
+        ClassDoesNotExistException::trigger($class);
     }
     
     /**
      * @param string|object $class
      * @param string        $property
-     * @throws \Gabrieljmj\Should\Exception\PropertyDoesNotExistsException
+     * @throws \Gabrieljmj\Should\Exception\PropertyDoesNotExistException
      */
-    public static function propertyDoesNotExists($class, $property)
+    public static function propertyDoesNotExist($class, $property)
     {
-        PropertyDoesNotExistsException::trigger($class, $property);
+        PropertyDoesNotExistException::trigger($class, $property);
     }
 
     /**
      * @param string|object $class
      * @param string        $method
-     * @throws \Gabrieljmj\Should\Exception\MethodDoesNotExistsException
+     * @throws \Gabrieljmj\Should\Exception\MethodDoesNotExistException
      */
-    public statiC function methodDoesNotExists($class, $method)
+    public statiC function methodDoesNotExist($class, $method)
     {
-        MethodDoesNotExistsException::trigger($class, $method);
+        MethodDoesNotExistException::trigger($class, $method);
     }
 
     /**
      * @param string|object $class
      * @param string        $method
      * @param string        $parameter
-     * @throws \Gabrieljmj\Should\Exception\ParameterDoesNotExistsException
+     * @throws \Gabrieljmj\Should\Exception\ParameterDoesNotExistException
      */
-    public static function parameterDoesNotExists($class, $method, $parameter)
+    public static function parameterDoesNotExist($class, $method, $parameter)
     {
-        ParameterDoesNotExistsException::trigger($class, $method, $parameter);
+        ParameterDoesNotExistException::trigger($class, $method, $parameter);
     }
 }

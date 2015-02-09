@@ -12,11 +12,11 @@ namespace Gabrieljmj\Should\Exception;
 
 use Gabrieljmj\Should\Exception\ExceptionCodes;
 
-class ParameterDoesNotExistsException extends \InvalidArgumentException
+class MethodDoesNotExistException extends \InvalidArgumentException
 {
-    public static function trigger($class, $method, $parameter)
+    public static function trigger($class, $method)
     {
         $class = is_object($class) ? get_class($class) : $class;
-        throw new ParameterDoesNotExistsException('The parameter ' . $parameter . ' does not exists on method ' . $class . '::' . $method, ExceptionCodes::METHOD_PARAMETER_DOES_NOT_EXISTS);
+        throw new MethodDoesNotExistException('The method ' . $class . '::' . $method . ' does not exist', ExceptionCodes::METHOD_DOES_NOT_EXIST);
     }
 }

@@ -49,7 +49,7 @@ abstract class AbstractPropertyAssert extends AbstractAssert
         $ref = new \ReflectionClass($class);
 
         if (!$ref->hasProperty($property)) {
-            ShouldException::propertyDoesNotExists($class, $property);
+            ShouldException::propertyDoesNotExist($class, $property);
         }
     }
 }

@@ -58,9 +58,11 @@ class Ambient implements AmbientInterface
     /**
      * @param string $name
      */
-    public function __construct($name = null)
+    final public function __construct($name = null)
     {
-        $this->name = $name;
+        if ($name !== null) {
+            $this->name = $name;
+        }
     }
     
     /**

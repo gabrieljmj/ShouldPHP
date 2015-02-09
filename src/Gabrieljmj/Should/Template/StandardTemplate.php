@@ -28,19 +28,24 @@ class StandardTemplate implements TemplateInterface
 | |_| | | | | |_| | |_| | |__| |_/ ||__/|__||__/
 \____/|_| |_|_____|_____|____|_____/|   |  ||\n";
 
-        if (count($this->getFail($report))) {
-            $return .= "\nREPORT\n--------------------------\n";
-            $return .= implode("\n\n", $this->getFail($report));
+        if ($report->getTotal() > 0) {
+            if (count($this->getFail($report))) {
+                $return .= "\nREPORT\n--------------------------\n";
+                $return .= implode("\n\n", $this->getFail($report));
+            }
+
+            $total = $report->getTotal();
+            $success = $report->getSuccessTotal();
+            $fail = $report->getFailTotal();
+            $time = round((microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"]) * 100) / 100;
+
+            $return .= "\n\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}\nExecution time: {$time}";
+        } else {
+            $return .= "-------------------------------------------------\nNo tests executed!";
         }
 
-        $total = $report->getTotal();
-        $success = $report->getSuccessTotal();
-        $fail = $report->getFailTotal();
-        $time = round((microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"]) * 100) / 100;
-
-        $return .= "\n\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}\nExecution time: {$time}";
-
         return $return;
+
     }
 
     private function getFail(Report $report)

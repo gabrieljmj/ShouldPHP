@@ -57,7 +57,7 @@ abstract class AbstractMethodAssert extends AbstractAssert
         $this->validateClass($class);
 
         if (!method_exists($class, $method)) {
-            ShouldException::methodDoesNotExists($class, $method);
+            ShouldException::methodDoesNotExist($class, $method);
         }
     }
 }

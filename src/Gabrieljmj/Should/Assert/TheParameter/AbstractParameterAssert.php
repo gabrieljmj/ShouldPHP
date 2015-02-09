@@ -65,7 +65,7 @@ abstract class AbstractParameterAssert extends AbstractAssert
         $this->validateClass($class);
 
         if (!method_exists($class, $method)) {
-            ShouldException::methodDoesNotExists($class, $method);
+            ShouldException::methodDoesNotExist($class, $method);
         }
 
         $ref = new \ReflectionMethod($class, $method);
@@ -74,7 +74,7 @@ abstract class AbstractParameterAssert extends AbstractAssert
         }, $ref->getParameters());
 
         if (!in_array($parameter, $paramsNames)) {
-            ShouldException::parameterDoesNotExists($class, $method, $parameter);
+            ShouldException::parameterDoesNotExist($class, $method, $parameter);
         }
     }
 }

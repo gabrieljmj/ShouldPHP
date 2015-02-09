@@ -70,7 +70,7 @@ abstract class AbstractAssert implements AssertInterface
         $class = $this->classToStr($class);
 
         if (!class_exists($class)) {
-            ShouldException::classDoesNotExists($class);
+            ShouldException::classDoesNotExist($class);
         }
     }
 

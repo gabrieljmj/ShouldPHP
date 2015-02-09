@@ -1,0 +1,12 @@
+{
+    "ambients": {
+        "s/"
+    },
+    "rules": {
+        "directory": {
+            "preffix": [
+                "Test.php"
+            ]
+        }
+    }
+}

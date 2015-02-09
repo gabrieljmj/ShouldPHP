@@ -11,6 +11,10 @@ use Gabrieljmj\Should\Template\StandardTemplate;
 use Gabrieljmj\Should\Event\ExecutionEventInterface;
 use Gabrieljmj\Should\Event\ExecutionEvent;
 use Gabrieljmj\Should\Logger\MonologAdapter;
+use Gabrieljmj\Should\Runner\DirectoryRunner;
+use Gabrieljmj\Should\Runner\AmbientFileRunner;
+use Gabrieljmj\Should\Runner\AmbientClassRunner;
+use Gabrieljmj\Should\Runner\JsonRunner;
 
 $eventDispatcher = new EventDispatcher();
 $eventDispatcher->addListener('should.execute', function (ExecutionEventInterface $event) {
@@ -24,10 +28,18 @@ $eventDispatcher->addListener('should.execute', function (ExecutionEventInterfac
 $event = new ExecutionEvent();
 $event->setTemplate(new StandardTemplate());
 
+$runners = [
+    new AmbientClassRunner(),
+    new AmbientFileRunner(),
+    new DirectoryRunner()
+];
+$runners[] = new JsonRunner($runners);
+
 $command = new ExecuteTestsCommand();
 $command->setEvent($event);
 $command->setLogger(new MonologAdapter('tests'));
 $command->setEventDispatcher($eventDispatcher);
+$command->pushRunners($runners);
 $app = new Application();
 $app->add($command);
 $app->add(new HelpCommand());

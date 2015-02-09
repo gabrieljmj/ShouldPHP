@@ -24,6 +24,8 @@ use Gabrieljmj\Should\Template\TemplateInterface;
 use Gabrieljmj\Should\Report\Report;
 use Gabrieljmj\Should\Event\ExecutionEventInterface;
 use Gabrieljmj\Should\Logger\LoggerAdapterInterface;
+use Gabrieljmj\Should\Exception\ConsoleException;
+use Gabrieljmj\Should\Runner\RunnerInterface;
 
 class ExecuteTestsCommand extends Command
 {
@@ -31,21 +33,6 @@ class ExecuteTestsCommand extends Command
      * @var \Gabrieljmj\Should\Logger\LoggerAdapterInterface
      */
     private $logger;
-
-    /**
-     * @var \Symfony\Component\Console\Input\InputInterface
-     */
-    private $input;
-
-    /**
-     * @var \Symfony\Component\Console\Output\OutputInterface
-     */
-    private $output;
-
-    /**
-     * @var \Gabrieljmj\Should\Report\Report
-     */
-    private $report;
 
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
@@ -56,6 +43,11 @@ class ExecuteTestsCommand extends Command
      * @var \Gabrieljmj\Should\Event\ExecutionEventInterface
      */
     private $event;
+
+    /**
+     * @var array
+     */
+    private $runners = [];
 
     /**
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface
@@ -71,6 +63,31 @@ class ExecuteTestsCommand extends Command
     public function setEvent(ExecutionEventInterface $event)
     {
         $this->event = $event;
+    }
+
+    public function pushRunners($runners)
+    {
+        if (is_array($runners)) {
+            foreach ($runners as $runner) {
+                if (!$runner instanceof RunnerInterface) {
+                    throw new \InvalidArgumentException('A runner passed is not instance of RunnerInterface');
+                }
+
+                if (!in_array($runner, $this->runners)) {
+                    $this->runners[] = $runner;
+                }
+            }
+
+            return;
+        }
+
+        if (!$runners instanceof RunnerInterface) {
+            throw new \InvalidArgumentException('A runner passed is not instance of RunnerInterface');
+        }
+
+        if (!in_array($runners, $this->runners)) {
+            $this->runners[] = $runner;
+        }
     }
 
     /**
@@ -108,187 +125,49 @@ class ExecuteTestsCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->input = $input;
-        $this->output = $output;
-        $file = $this->input->getArgument('file');
-        $this->input->hasArgument('test_name') ? $testName = $this->input->getArgument('test_name') : null;
+        $file = $input->getArgument('file');
+        $input->hasArgument('test_name') ? $testName = $input->getArgument('test_name') : null;
+        $reports = [];
 
-        if ($this->isDir($file)) {
-            $dir = $file;
-            $ambientFiles = $this->getAmbientFilesFromDir($dir);
-
-            $this->executeArrayOfTests($ambientFiles);
-        } else {
-            $ext = $this->getFileExt($file);
-
-            if ($ext === 'php') {
-                $ambient = $this->validateFile($file);
-
-                $this->runTest($ambient);
-            } elseif ($ext === 'json') {
-                if (file_exists($file)) {
-                    $fileContent = file_get_contents($file);
-                    $json = json_decode($fileContent);
-                    $ambientFiles = $json->ambients;
-
-                    $this->executeArrayOfTests($ambientFiles);
-                }
-            } elseif (class_exists(str_replace('/', '\\', $file))) {
-                $file = str_replace('/', '\\', $file);
-                $this->executeAmbientObject($file);
+        foreach ($this->runners as $runner) {
+            if ($runner->canHandle($file)) {
+                $runner->run($file);
+                $reports[] = $runner->getReport();
             }
         }
 
         $this->event->setOutput($output);
-        $this->event->setReport($this->report);
+        $this->event->setReport($this->combineReports($reports));
 
         $this->eventDispatcher->dispatch('should.execute', $this->event);
     }
 
-    /**
-     * @param string $file
-     * @return string
-     */
-    private function getFileExt($file)
+    private function combineReports($reports)
     {
-        $e = explode('.', $file);
-        return end($e);
-    }
+        $finalReport = new Report('all_tests');
 
-    /**
-     * @param string $file
-     * @return \Gabrieljmj\Should\AmbientInterface
-     */
-    private function validateFile($file)
-    {
-        if (!file_exists($file)) {
-            throw new \Exception('The file of an ambient was not found: ' . $file);
-        }
+        foreach ($reports as $report) {
+            $assertList = $report->getAssertList();
 
-        $ambientInstance = require $file;
-
-        if (!is_object($ambientInstance) || !$ambientInstance instanceof AmbientInterface) {
-            throw new \Exception('The file of an ambient does not return an instance of a valid ambient');
-        }
-
-        return $ambientInstance;
-    }
-
-    /**
-     * @param \Gabrieljmj\Should\AmbientInterface $ambient
-     * @return \Gabrieljmj\Should\Collection
-     */
-    private function runTest(AmbientInterface $ambient)
-    {
-        $ambient->run();
-        $report = $ambient->getReport();
-
-        if ($this->input->getOption('save')) {
-            $this->logger->setFile($this->input->getOption('save'));
-            $this->logger->info($report->serialize());
-        }
-
-        if ($this->report === null) {
-            $this->report = new Report('all_tested');
-        }
-
-        $assertList = $report->getAssertList();
-
-        foreach ($assertList as $testType => $value) {
-            if (isset($assertList[$testType]['fail'])) {
-                foreach ($assertList[$testType]['fail'] as $element => $fails) {
-                    foreach ($fails as $fail) {
-                        $this->report->addAssert($fail);
+            foreach ($assertList as $testType => $value) {
+                if (isset($assertList[$testType]['fail'])) {
+                    foreach ($assertList[$testType]['fail'] as $element => $fails) {
+                        foreach ($fails as $fail) {
+                            $finalReport->addAssert($fail);
+                        }
                     }
                 }
-            }
 
-            if (isset($assertList[$testType]['success'])) {
-                foreach ($assertList[$testType]['success'] as $element => $successes) {
-                    foreach ($successes as $success) {
-                        $this->report->addAssert($success);
+                if (isset($assertList[$testType]['success'])) {
+                    foreach ($assertList[$testType]['success'] as $element => $successes) {
+                        foreach ($successes as $success) {
+                            $finalReport->addAssert($success);
+                        }
                     }
                 }
             }
         }
-    }
 
-    /**
-     * @param array $ambientFiles
-     * @return array
-     */
-    private function executeArrayOfTests(array $ambientFiles)
-    {
-        $ambients = [];
-
-        foreach ($ambientFiles as $ambientFile) {
-            if ($this->isDir($ambientFile)) {
-                $this->executeArrayOfTests($this->getAmbientFilesFromDir($ambientFile));
-            } elseif (class_exists($ambientFile)) {
-                $this->executeAmbientObject($ambientFile);
-            } else {
-                $ambients[] = $this->validateFile($ambientFile);
-            }
-        }
-
-        foreach ($ambients as $ambient) {
-            $this->runTest($ambient);
-        }
-    }
-
-    /**
-     * @param string $dir
-     * @return boolean
-     */
-    private function isDir($dir)
-    {
-        return substr($dir, -1) == '/';
-    }
-
-    /**
-     * @param string $dir
-     * @return array
-     */
-    private function getAmbientFilesFromDir($dir)
-    {   
-        if (!is_dir($dir) || !is_readable($dir)) {
-            throw new Exception('Directory not exists or is not readable: ' . $dir);
-        }
-
-        $files = scandir($dir);
-        unset($files[0], $files[1]);
-
-        foreach ($files as $key => $file) {
-            $files[$key] = $dir . DIRECTORY_SEPARATOR . $file;
-        }
-
-        return $files;
-    }
-
-    /**
-     * @param string $class
-     * @return array
-     */
-    private function executeAmbientObject($class)
-    {
-        $ref = new \ReflectionClass($class);
-        $methods = $ref->getMethods();
-        $instance = $ref->newInstance();
-        $executedMethods = 0;
-
-        if (!$instance instanceof AmbientInterface) {
-            throw new \Exception('This ambient is not a directory or a file or a object: ' . $class);
-        }
-
-        foreach ($methods as $method) {
-            if ($method->isPublic()) {
-                if (strtolower(substr($method->name, 0, 4)) === 'test') {
-                    $executedMethods++;
-                    call_user_func_array([$instance, $method->name], []);
-                }
-            }
-        }
-
-        return $this->runTest($instance);
+        return $finalReport;
     }
 }
