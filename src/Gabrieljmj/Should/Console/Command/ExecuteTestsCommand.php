@@ -46,6 +46,11 @@ class ExecuteTestsCommand extends Command
      * @var array
      */
     private $runners = [];
+    
+    /**
+     * @var \Gabrieljmj\Should\Template\TemplateInterface
+     */
+    private $template;
 
     /**
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
@@ -53,6 +58,14 @@ class ExecuteTestsCommand extends Command
     public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
+    }
+    
+    /**
+     * @param \Gabrieljmj\Should\Template\TemplateInterface $template
+     */
+    public function setTemplate(TemplateInterface $template)
+    {
+        $this->template = $template;
     }
 
     /**
@@ -118,6 +131,12 @@ class ExecuteTestsCommand extends Command
                     's',
                     InputOption::VALUE_REQUIRED,
                     'Do you want to save the report?'
+             )
+             ->addOption(
+                    'colors',
+                    'c',
+                    InputOption::VALUE_NONE,
+                    'Show your report with colors?'
              );
     }
 
@@ -138,8 +157,18 @@ class ExecuteTestsCommand extends Command
             }
         }
 
+        if ($input->getOption('colors')) {
+            $this->template->colors();
+        }
+        
         $this->event->setOutput($output);
-        $this->event->setReport($this->combineReports($reports));
+        $this->event->setTemplate($this->template);
+        $this->event->setReport($report = $this->combineReports($reports));
+
+        if ($local = $input->getOption('save')) {
+            $this->logger->setFile($local);
+            $this->logger->info($report->serialize());
+        }
 
         $this->eventDispatcher->dispatch('should.execute', $this->event);
     }

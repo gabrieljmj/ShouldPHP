@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Gabrieljmj\Should\Console\Command\ExecuteTestsCommand;
 use Gabrieljmj\Should\Console\Command\HelpCommand;
 use Monolog\Logger;
-use Gabrieljmj\Should\Template\StandardTemplate;
+use Gabrieljmj\Should\Template\Console\StandardConsoleTemplate;
 use Gabrieljmj\Should\Event\ExecutionEventInterface;
 use Gabrieljmj\Should\Event\ExecutionEvent;
 use Gabrieljmj\Should\Logger\MonologAdapter;
@@ -25,9 +25,6 @@ $eventDispatcher->addListener('should.execute', function (ExecutionEventInterfac
     $output->writeln($template->render($report));
 });
 
-$event = new ExecutionEvent();
-$event->setTemplate(new StandardTemplate());
-
 $runners = [
     new AmbientClassRunner(),
     new AmbientFileRunner(),
@@ -36,7 +33,8 @@ $runners = [
 $runners[] = new JsonRunner($runners);
 
 $command = new ExecuteTestsCommand();
-$command->setEvent($event);
+$command->setEvent(new ExecutionEvent());
+$command->setTemplate(new StandardConsoleTemplate());
 $command->setLogger(new MonologAdapter('tests'));
 $command->setEventDispatcher($eventDispatcher);
 $command->pushRunners($runners);

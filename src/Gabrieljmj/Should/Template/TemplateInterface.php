@@ -14,4 +14,10 @@ use Gabrieljmj\Should\Template\RenderizableInterface;
 
 interface TemplateInterface extends RenderizableInterface
 {
+    /**
+     * Enable colors for tests
+     * 
+     * @param boolean $enable
+     */
+    public function colors($enable = true);
 }

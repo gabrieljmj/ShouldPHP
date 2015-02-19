@@ -8,16 +8,39 @@
  * @license MIT
  */
  
-namespace Gabrieljmj\Should\Template;
+namespace Gabrieljmj\Should\Template\Console;
 
 use Gabrieljmj\Should\Template\TemplateInterface;
 use Gabrieljmj\Should\Report\Report;
 
-class StandardTemplate implements TemplateInterface
+class StandardConsoleTemplate implements TemplateInterface
 {
+    /**
+     * Colors are enabled or desabled
+     *
+     * @var boolean
+     */
+    private $colors = false;
+    
+    /**
+     * Enable colors for tests
+     * 
+     * @param boolean $enable
+     */
+    public function colors($enable = true)
+    {
+        $this->colors = $enable;
+    }
+    
+    /**
+     * Return the created content by determined report
+     * 
+     * @param \Gabrieljmj\Should\Report\Report $report
+     * @return string
+     */
     public function render(Report $report)
     {
-        $return = " 
+        $should = " 
  ____  _   _ _____ _   _ _    _____
 /  _ \| | | |  _  | | | | |  |  _  \ 
 | | |_| | | | | | | | | | |  | | \ |
@@ -27,6 +50,8 @@ class StandardTemplate implements TemplateInterface
 | | | | | | | | | | | | | |  | | | ||  \|  ||  \
 | |_| | | | | |_| | |_| | |__| |_/ ||__/|__||__/
 \____/|_| |_|_____|_____|____|_____/|   |  ||\n";
+
+        $return = $this->colors ? '<comment>' . $should . '</comment>' : $should;
 
         if ($report->getTotal() > 0) {
             if (count($this->getFail($report))) {
@@ -39,7 +64,9 @@ class StandardTemplate implements TemplateInterface
             $fail = $report->getFailTotal();
             $time = round((microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"]) * 100) / 100;
 
-            $return .= "\n\nRESULT\n--------------------------\nTotal: {$total}\nSuccess: {$success}\nFail: {$fail}\nExecution time: {$time}";
+            $return .= "\n\nRESULT\n--------------------------\n";
+            $info = "Total: {$total}\nSuccess: {$success}\nFail: {$fail}\nExecution time: {$time}";
+            $return .= $this->colors ? '<info>' . $info . '</info>' : $info;
         } else {
             $return .= "-------------------------------------------------\nNo tests executed!";
         }
@@ -61,7 +88,8 @@ class StandardTemplate implements TemplateInterface
                         $n = $key + 1;
                         $name = $fail->getName();
                         $failmsg = $fail->getMessage() !== null ? $fail->getMessage() : $fail->getFailMessage();
-                        $return[] = "{$n}) {$name} - {$failmsg}";
+                        $li = "{$n}) {$name} - {$failmsg}";
+                        $return[] = $this->colors ? '<error>' . $li . '</error>' : $li;
                     }
                 }
             }
