@@ -66,18 +66,7 @@ class JsonRunner extends AbstractRunner
                 }
             }
 
-            foreach ($ambients as $ambient) {
-                foreach ($this->runners as $runner) {
-                    if ($runner->canHandle($ambient)) {
-                        $runner->run($ambient);
-                        $reports[] = $runner->getReport();
-                    }
-                }
-            }
-
-            foreach ($reports as $report) {
-                $this->combineReport($report);
-            }
+            $this->createReportFromAmbients($ambients);
         }
     }
 
@@ -95,5 +84,27 @@ class JsonRunner extends AbstractRunner
     protected function acceptRule(RuleInterface $rule)
     {
         return $rule instanceof JsonRuleInterface;
+    }
+
+    /**
+     * Creates the report from all executed ambients
+     *
+     * @param array $ambients
+     */
+    private function createReportFromAmbients(array $ambients){
+        $reports = [];
+
+        foreach ($ambients as $ambient) {
+            foreach ($this->runners as $runner) {
+                if ($runner->canHandle($ambient)) {
+                    $runner->run($ambient);
+                    $reports[] = $runner->getReport();
+                }
+            }
+        }
+
+        foreach ($reports as $report) {
+            $this->combineReport($report);
+        }
     }
 }
