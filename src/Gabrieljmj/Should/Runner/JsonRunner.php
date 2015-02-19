@@ -41,7 +41,6 @@ class JsonRunner extends AbstractRunner
     {
         $content = file_get_contents($param);
         $json = json_decode($content);
-        $reports = [];
         $ruleNamespace = '\Gabrieljmj\Should\Runner\Rule';
 
         if (isset($json->ambients)) {
