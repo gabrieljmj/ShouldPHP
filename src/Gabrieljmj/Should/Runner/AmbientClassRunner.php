@@ -11,7 +11,7 @@
 namespace Gabrieljmj\Should\Runner;
 
 use Gabrieljmj\Should\Runner\AbstractRunner;
-use Gabrieljmj\Should\Runner\Rule\AmbientClass\AbientClassRuleInterface;
+use Gabrieljmj\Should\Runner\Rule\AmbientClass\AmbientClassRuleInterface;
 use Gabrieljmj\Should\Runner\Rule\RuleInterface;
 use Gabrieljmj\Should\Ambient\AmbientInterface;
 
