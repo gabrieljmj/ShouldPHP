@@ -55,7 +55,7 @@ class AsDefaultValue extends AbstractParameterAssert
     protected function createFailMessage()
     {
         $class = $this->classToStr($this->class);
-        return 'The default value of the parameter ' . $this->parameter . ' of the ' . $class . '::' . $this->method . ' is not equal to ' . print_r($this->value);
+        return 'The default value of the parameter ' . $this->parameter . ' of the ' . $class . '::' . $this->method . ' is not equal to ' . print_r($this->value, true);
     }
 
     /**
