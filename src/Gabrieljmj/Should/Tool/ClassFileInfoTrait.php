@@ -53,9 +53,11 @@ trait ClassFileInfoTrait
                 continue;
             }
 
-            for (;$i<count($tokens);$i++) {
+            $totalTokens = count($tokens);
+
+            for (; $i < $totalTokens; $i++) {
                 if ($tokens[$i][0] === T_NAMESPACE) {
-                    for ($j=$i+1;$j<count($tokens); $j++) {
+                    for ($j = $i + 1; $j < $totalTokens; $j++) {
                         if ($tokens[$j][0] === T_STRING) {
                             $this->namespace .= '\\'.$tokens[$j][1];
                         } else if ($tokens[$j] === '{' || $tokens[$j] === ';') {
@@ -65,9 +67,9 @@ trait ClassFileInfoTrait
                 }
 
                 if ($tokens[$i][0] === T_CLASS) {
-                    for ($j=$i+1;$j<count($tokens);$j++) {
+                    for ($j = $i + 1; $j < $totalTokens; $j++) {
                         if ($tokens[$j] === '{') {
-                            $this->class = $tokens[$i+2][1];
+                            $this->class = $tokens[$i + 2][1];
                         }
                     }
                 }
