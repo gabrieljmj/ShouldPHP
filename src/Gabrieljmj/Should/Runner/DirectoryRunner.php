@@ -63,7 +63,6 @@ class DirectoryRunner extends AbstractRunner
             $require = require_once $file;
 
             if (!$require instanceof AmbientInterface) {
-                $ref = new \ReflectionClass($this->getNamespace($file) . '\\' . $this->getClass($file));
                 $ambients['classes'][] = $this->getNamespace($file) . '\\' . $this->getClass($file);
             } else {
                 $ambients['files'][] = $require;
