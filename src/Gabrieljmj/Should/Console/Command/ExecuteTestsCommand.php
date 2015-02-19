@@ -69,12 +69,12 @@ class ExecuteTestsCommand extends Command
     }
 
     /**
-     * @param \Symfony\Component\EventDispatcher\Event $event
+     * @param \Gabrieljmj\Should\Event\ExecutionEventInterface $event
      */
-    public function setEvent(Event $event)
+    public function setEvent(ExecutionEventInterface $event)
     {
-        if (!$event instanceof ExecutionEventInterface) {
-            throw new \InvalidArgumentException('Argument passed shoud be instance of ExecutionEventInterface');
+        if (!$event instanceof Event) {
+            throw new \InvalidArgumentException('Argument passed shoud be instance of \Symfony\Component\EventDispatcher\Event');
         }
 
         $this->event = $event;
