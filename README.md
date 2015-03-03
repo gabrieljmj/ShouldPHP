@@ -6,6 +6,7 @@ ShouldPHP
 
 * **For now has a few assertions**
 * [Little documentation](https://github.com/GabrielJMJ/ShouldPHP/wiki/Documentation)
+* [Simple Should](https://gist.github.com/GabrielJMJ/26fed8fff56e65cd8b4f)
 ```
                                                                    ____________________
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@======@@@@@@     |                    |
